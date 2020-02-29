@@ -96,6 +96,11 @@ Plug 'ervandew/supertab'                                        " use <tab> to c
 Plug 'Yggdroot/indentLine'                                      " indectLine
 Plug 'jmcantrell/vim-virtualenv'
 
+
+" Markdown
+Plug 'godlygeek/tabular'
+Plug 'plasticboy/vim-markdown'
+
 "*****************************************************************************
 "*****************************************************************************
 
@@ -122,6 +127,10 @@ vnoremap <space> zf
 " ale
 let g:ale_linters = {}
 
+" vim-markdown
+let g:vim_markdown_no_default_key_mappings = 1
+
+" NERDTree
 nnoremap <silent> <F5> :NERDTree<CR>
 
 "*****************************************************************************
@@ -158,6 +167,10 @@ let g:NERDCompactSexyComs        = 1 " Use compact syntax for prettified multi-l
 let g:NERDTrimTrailingWhitespace = 1 " Enable trimming of trailing whitespace when uncommenting
 let g:NERDDefaultAlign           = 'left' " Align line-wise comment delimiters flush left instead of following code indentation
 let g:NERDCustomDelimiters       = {'c':{'left':'//'}, 'python':{'left':'#'}, 'bash':{'left':'#'}}
+
+" vim-markdown
+let g:vim_markdown_toc_autofit      = 1
+let g:vim_markdown_folding_disabled = 1
 
 " virtualenv
 let g:virtualenv_auto_activate = 1
