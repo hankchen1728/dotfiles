@@ -1,5 +1,6 @@
 # Module path for local packages
 export MODULEPATH=/home/u/unicorngundam/local/modules/modulefiles:$MODULEPATH
-export VIRTUAL_ENV=/work/cardiovascular/envs/
 
+# export VIRTUAL_ENV=/work/cardiovascular/envs/
+export VIRTUAL_ENV=${HOME}/.virtual_envs/
 # module load python3
