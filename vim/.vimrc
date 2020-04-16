@@ -45,9 +45,15 @@ set conceallevel=1
 set hlsearch " Highlight the search
 hi Search cterm=reverse ctermbg=none ctermfg=none           " Search match
 hi CursorLineNr cterm=bold ctermfg=Green ctermbg=none       " Cursor Line Number
-hi CursorLine cterm=none ctermbg=Brown ctermfg=none         " Cursor Line
-hi Comment ctermfg=032
+hi CursorLine cterm=none ctermbg=094 ctermfg=none           " Cursor Line
+hi Comment ctermfg=087
+hi String ctermfg=214
 hi Visual cterm=bold ctermbg=Grey guibg=Grey40
+
+" High light unwanted spaces in end of line
+highlight ExtraWhitespace ctermbg=darkred guibg=darkcyan
+autocmd BufEnter * if &ft != 'help' | match ExtraWhitespace /\s\+$/ | endif
+autocmd BufEnter * if &ft == 'help' | match none /\s\+$/ | endif
 
 
 "*****************************************************************************
@@ -98,8 +104,9 @@ Plug 'jmcantrell/vim-virtualenv'
 
 
 " Markdown
-Plug 'godlygeek/tabular'
-Plug 'plasticboy/vim-markdown'
+Plug 'godlygeek/tabular', { 'for': 'markdown' }
+Plug 'plasticboy/vim-markdown', { 'for': 'markdown' }
+Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug'] }
 
 "*****************************************************************************
 "*****************************************************************************
@@ -193,6 +200,30 @@ let g:SuperTabDefaultCompletionType = "context"
 autocmd FileType python set omnifunc=jedi#completions
 autocmd FileType python setlocal completeopt-=preview " disable docstring preview window popup
 
+" Markdown preview
+let g:mkdp_auto_start = 0 				  " do NOT automatically open the preview window
+let g:mkdp_auto_close = 1 				  " auto close current preview window when change to another buffer
+let g:mkdp_refresh_slow = 0  			  " auto refresh markdown as you edit or move the cursor
+let g:mkdp_command_for_global = 0         " MarkdownPreview command can be use for only markdown file
+let g:mkdp_open_to_the_world = 1   		  " preview server available to others in your network
+let g:mkdp_open_ip = system("curl ifconfig.me")  " custom the server ip
+let g:mkdp_port = '8017'                  " use a custom port to start server
+let g:mkdp_browser = ''                   " no browser specified
+let g:mkdp_echo_preview_url = 1           " echo preview page url in command line when open preview page
+let g:mkdp_browserfunc = ''               " custom vim function name to open preview page
+let g:mkdp_page_title = '「${name}」'     " preview page title, default with filename
+let g:mkdp_preview_options = {
+    \ 'mkit': {},
+    \ 'katex': {},
+    \ 'uml': {},
+    \ 'maid': {},
+    \ 'disable_sync_scroll': 0,
+    \ 'sync_scroll_type': 'middle',
+    \ 'hide_yaml_meta': 1,
+    \ 'sequence_diagrams': {},
+    \ 'flowchart_diagrams': {}
+    \ }
+
 "*****************************************************************************
 """ Custom configs
 "*****************************************************************************
@@ -204,6 +235,8 @@ augroup vimrc-python
       \ formatoptions+=croq softtabstop=4
       \ cinwords=if,elif,else,for,while,try,except,finally,def,class,with
 augroup END
+syntax region Comment start=/"""/ end=/"""/
+syntax region Comment start=/'''/ end=/'''/
 
 " ale
 :call extend(g:ale_linters, {

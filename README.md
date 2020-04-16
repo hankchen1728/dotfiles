@@ -10,7 +10,7 @@
 /vim/.vimrc
 ```
 
-### About ```virtualenv``` on ```vim```
+### 1. About ```virtualenv``` on ```vim```
 
 First add the following line to ```.vimrc``` ,
 ```
