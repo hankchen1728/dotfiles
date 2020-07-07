@@ -55,6 +55,9 @@ highlight ExtraWhitespace ctermbg=darkred guibg=darkcyan
 autocmd BufEnter * if &ft != 'help' | match ExtraWhitespace /\s\+$/ | endif
 autocmd BufEnter * if &ft == 'help' | match none /\s\+$/ | endif
 
+" Add comment
+syntax region Comment start=/"""/ end=/"""/
+syntax region Comment start=/'''/ end=/'''/
 
 "*****************************************************************************
 "" Vim-PLug core
@@ -132,7 +135,17 @@ nnoremap <space> za
 vnoremap <space> zf
 
 " ale
-let g:ale_linters = {}
+" let g:ale_lint_on_text_changed = 0
+" let g:ale_lint_on_enter = 0
+" let g:ale_lint_on_save = 1
+let g:ale_fixers = {
+\    'python': ['autopep8']
+\}
+let g:ale_python_autopep8_options = '-v -a -a -a --max-line-length=79'
+let g:ale_linters = {
+\   'python': ['flake8', 'pylint'],
+\   'zsh': ['shell'],
+\}
 
 " vim-markdown
 let g:vim_markdown_no_default_key_mappings = 1
@@ -235,13 +248,7 @@ augroup vimrc-python
       \ formatoptions+=croq softtabstop=4
       \ cinwords=if,elif,else,for,while,try,except,finally,def,class,with
 augroup END
-syntax region Comment start=/"""/ end=/"""/
-syntax region Comment start=/'''/ end=/'''/
-
-" ale
-:call extend(g:ale_linters, {
-    \'python': ['flake8', 'pylint'], })
 
 " vim-airline
 let g:airline#extensions#virtualenv#enabled = 1
-
+let g:airline#extensions#tabline#buffer_nr_show=1    " Show the index of buffer

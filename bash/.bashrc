@@ -47,7 +47,7 @@ esac
 
 if [ -n "$force_color_prompt" ]; then
     if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
-	# We have color support; assume it's compliant with Ecma-48
+    # We have color support; assume it's compliant with Ecma-48
 	# (ISO/IEC-6429). (Lack of such support is extremely rare, and such
 	# a case would tend to support setf rather than setaf.)
 	color_prompt=yes
@@ -130,10 +130,15 @@ fi
 #    if [ -f "/opt/anaconda3/5.1.0/etc/profile.d/conda.sh" ]; then
 #        . "/opt/anaconda3/5.1.
 
+# Set vim for default editor
+export VISUAL=vim
+export EDITOR="$VISUAL"
+
 # The next line updates PATH for the Google Cloud SDK.
 if [ -f '/home/u/unicorngundam/google-cloud-sdk/path.bash.inc' ]; then . '/home/u/unicorngundam/google-cloud-sdk/path.bash.inc'; fi
 
 # The next line enables shell command completion for gcloud.
 if [ -f '/home/u/unicorngundam/google-cloud-sdk/completion.bash.inc' ]; then . '/home/u/unicorngundam/google-cloud-sdk/completion.bash.inc'; fi
 
-source ${HOME}/.config/source/.source
+# source ${HOME}/.config/source/.source
+alias fish="${HOME}/.local/bin/fish"
