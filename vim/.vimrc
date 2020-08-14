@@ -55,9 +55,9 @@ highlight ExtraWhitespace ctermbg=darkred guibg=darkcyan
 autocmd BufEnter * if &ft != 'help' | match ExtraWhitespace /\s\+$/ | endif
 autocmd BufEnter * if &ft == 'help' | match none /\s\+$/ | endif
 
-" Add comment
-syntax region Comment start=/"""/ end=/"""/
-syntax region Comment start=/'''/ end=/'''/
+" add comment
+syntax region comment start=/"""/ end=/"""/
+syntax region comment start=/'''/ end=/'''/
 
 "*****************************************************************************
 "" Vim-PLug core
@@ -91,6 +91,7 @@ Plug 'scrooloose/nerdtree'
 Plug 'jistr/vim-nerdtree-tabs'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
+Plug 'tpope/vim-fugitive'                                       " git helper for vim
 Plug 'w0rp/ale'
 
 " Plug 'tpope/vim-commentary'                                   " comment stuff out
@@ -102,14 +103,16 @@ Plug 'scrooloose/nerdcommenter'                                 " vim plugin for
 Plug 'davidhalter/jedi-vim'
 Plug 'raimon49/requirements.txt.vim', {'for': 'requirements'}
 Plug 'ervandew/supertab'                                        " use <tab> to completion
-Plug 'Yggdroot/indentLine'                                      " indectLine
+Plug 'Yggdroot/indentLine'                                      " indectline
 Plug 'jmcantrell/vim-virtualenv'
-
 
 " Markdown
 Plug 'godlygeek/tabular', { 'for': 'markdown' }
 Plug 'plasticboy/vim-markdown', { 'for': 'markdown' }
 Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug'] }
+
+" csv layout
+Plug 'chrisbra/csv.vim'
 
 "*****************************************************************************
 "*****************************************************************************
@@ -163,15 +166,56 @@ nnoremap <silent> <F5> :NERDTree<CR>
 "*****************************************************************************
 "" Plug setting
 "*****************************************************************************
-" Hotkey of opening NERDTREE
+" Hotkey of opening NERDTree
 
 " vim-airline
+set laststatus=2                                           " set status line
 let g:airline_theme = 'powerlineish'
 let g:airline#extensions#branch#enabled = 1
 let g:airline#extensions#ale#enabled = 1
+let g:airline_powerline_fonts = 1                          " enable powerline-fonts
 let g:airline#extensions#tabline#enabled = 1
-let g:airline#extensions#tagbar#enabled = 1
+let g:airline#extensions#tabline#buffer_nr_show=1          " Show the index of buffer
+let g:airline#extensions#bufferline#enabled = 1
+" let g:airline#extensions#tagbar#enabled = 1
 let g:airline_skip_empty_sections = 1
+
+let g:airline_symbols = get(g:, 'airline_symbols', {})
+let g:airline_symbols.space = "\ua0"
+
+" if !exists('g:airline_powerline_fonts')
+" unicode symbols
+  let g:airline_left_sep = '»'
+  let g:airline_left_sep = '▶'
+  let g:airline_right_sep = '«'
+  let g:airline_right_sep = '◀'
+  let g:airline_symbols.crypt = '🔒'
+  let g:airline_symbols.linenr = '☰'
+  let g:airline_symbols.linenr = '␊'
+  let g:airline_symbols.linenr = '␤'
+  let g:airline_symbols.linenr = '¶'
+  let g:airline_symbols.maxlinenr = ''
+  let g:airline_symbols.maxlinenr = '㏑'
+  let g:airline_symbols.branch = '⎇'
+  let g:airline_symbols.paste = 'PASTE'
+  " let g:airline_symbols.paste = 'ρ'
+  " let g:airline_symbols.paste = 'Þ'
+  " let g:airline_symbols.paste = '∥'
+  let g:airline_symbols.spell = 'Ꞩ'
+  let g:airline_symbols.notexists = 'Ɇ'
+  let g:airline_symbols.whitespace = 'Ξ'
+" else
+" powerline symbols
+  let g:airline_left_sep = ''
+  let g:airline_left_alt_sep = ''
+  let g:airline_right_sep = ''
+  let g:airline_right_alt_sep = ''
+  let g:airline_symbols.branch = ''
+  let g:airline_symbols.readonly = ''
+  let g:airline_symbols.linenr = '☰'
+  let g:airline_symbols.maxlinenr = ''
+  let g:airline_symbols.dirty='⚡'
+" endif
 
 " indentLine
 let g:indentLine_enabled = 0
@@ -249,6 +293,9 @@ augroup vimrc-python
       \ cinwords=if,elif,else,for,while,try,except,finally,def,class,with
 augroup END
 
+" YAML
+" au! BufNewFile,BufReadPost *.{yaml,yml} set filetype=yaml foldmethod=indent
+autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
+
 " vim-airline
 let g:airline#extensions#virtualenv#enabled = 1
-let g:airline#extensions#tabline#buffer_nr_show=1    " Show the index of buffer
