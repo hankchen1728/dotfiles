@@ -22,6 +22,8 @@ set cindent                " auto indent
 set hidden                 " hidden unsaved buffers instead of closing them
 set wrap                   " line wrap
 set backspace=indent,eol,start
+set clipboard=unnamedplus  " use system's clipboard
+" set ambiwidth=double       " Double char width
 
 " scroll offset(line numbers)
 if !&scrolloff
@@ -36,6 +38,7 @@ set pastetoggle=<F2>
 set background=dark
 set synmaxcol=150
 set t_Co=256               " 256 colors
+" set term=xterm-256color
 colorscheme monokai-bold
 
 " conceal
@@ -86,6 +89,9 @@ call plug#begin(expand('~/.vim/plugged'))
 "*****************************************************************************
 "" Plug install packages
 "*****************************************************************************
+"
+Plug 'crusoexia/vim-monokai'
+
 " General use
 Plug 'scrooloose/nerdtree'
 Plug 'jistr/vim-nerdtree-tabs'
@@ -175,6 +181,7 @@ let g:airline#extensions#branch#enabled = 1
 let g:airline#extensions#ale#enabled = 1
 let g:airline_powerline_fonts = 1                          " enable powerline-fonts
 let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#fnamemod = ':t'
 let g:airline#extensions#tabline#buffer_nr_show=1          " Show the index of buffer
 let g:airline#extensions#bufferline#enabled = 1
 " let g:airline#extensions#tagbar#enabled = 1
@@ -190,7 +197,7 @@ let g:airline_symbols.space = "\ua0"
   let g:airline_right_sep = '«'
   let g:airline_right_sep = '◀'
   let g:airline_symbols.crypt = '🔒'
-  let g:airline_symbols.linenr = '☰'
+  let g:airline_symbols.linenr = '☰ '
   let g:airline_symbols.linenr = '␊'
   let g:airline_symbols.linenr = '␤'
   let g:airline_symbols.linenr = '¶'
@@ -212,7 +219,7 @@ let g:airline_symbols.space = "\ua0"
   let g:airline_right_alt_sep = ''
   let g:airline_symbols.branch = ''
   let g:airline_symbols.readonly = ''
-  let g:airline_symbols.linenr = '☰'
+  let g:airline_symbols.linenr = '☰ '
   let g:airline_symbols.maxlinenr = ''
   let g:airline_symbols.dirty='⚡'
 " endif
