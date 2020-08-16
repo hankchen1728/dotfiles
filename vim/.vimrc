@@ -30,9 +30,9 @@ if !&scrolloff
     set scrolloff=5
 endif
 
-" paste setting (toggles the 'paste' option)
-nnoremap <F2> :set invpaste paste?<CR>
-set pastetoggle=<F2>
+"*****************************************************************************
+"" Visual Setting
+"*****************************************************************************
 
 " color/colorscheme/syntax
 set background=dark
@@ -45,22 +45,20 @@ colorscheme monokai-bold
 set conceallevel=1
 "nnoremap <Space>c :setlocal conceallevel=<c-r>=&conceallevel == 0 ? '2' : '0'<cr><cr>
 
-set hlsearch " Highlight the search
+set hlsearch    " Highlight the search
+set incsearch   " incremental search
 hi Search cterm=reverse ctermbg=none ctermfg=none           " Search match
 hi CursorLineNr cterm=bold ctermfg=Green ctermbg=none       " Cursor Line Number
 hi CursorLine cterm=none ctermbg=094 ctermfg=none           " Cursor Line
 hi Comment ctermfg=087
 hi String ctermfg=214
-hi Visual cterm=bold ctermbg=Grey guibg=Grey40
+hi Visual cterm=bold ctermbg=Grey guibg=Grey40              " Selected block
 
 " High light unwanted spaces in end of line
 highlight ExtraWhitespace ctermbg=darkred guibg=darkcyan
 autocmd BufEnter * if &ft != 'help' | match ExtraWhitespace /\s\+$/ | endif
 autocmd BufEnter * if &ft == 'help' | match none /\s\+$/ | endif
 
-" add comment
-syntax region comment start=/"""/ end=/"""/
-syntax region comment start=/'''/ end=/'''/
 
 "*****************************************************************************
 "" Vim-PLug core
@@ -89,8 +87,8 @@ call plug#begin(expand('~/.vim/plugged'))
 "*****************************************************************************
 "" Plug install packages
 "*****************************************************************************
-"
-Plug 'crusoexia/vim-monokai'
+" Colorsheme
+" Plug 'crusoexia/vim-monokai'
 
 " General use
 Plug 'scrooloose/nerdtree'
@@ -99,6 +97,7 @@ Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'tpope/vim-fugitive'                                       " git helper for vim
 Plug 'w0rp/ale'
+Plug 'google/vim-searchindex'                                   " Search index helper
 
 " Plug 'tpope/vim-commentary'                                   " comment stuff out
 Plug 'scrooloose/nerdcommenter'                                 " vim plugin for intensely orgasmic commenting
@@ -137,37 +136,34 @@ filetype plugin indent on
 "" Mappings
 "*****************************************************************************
 
+" paste setting (toggles the 'paste' option)
+nnoremap <silent> <F2> :set invpaste paste?<CR>
+set pastetoggle=<F2>
+
+" Switch Buffer in Normal mode
+nnoremap <C-J> :bn<CR>
+nnoremap <C-K> :bp<CR>
+nnoremap <Space><Tab> :b#<CR>    " switch to previous edited buffer
+
+" { Escape key mapping } {{{
+nnoremap q  <Esc>
+nnoremap qq <Esc>
+vnoremap q  <Esc>
+inoremap qq <Esc>
+" }}}
+
+
 " Folding
 " set foldmethod=indent
 set foldmethod=manual
 nnoremap <space> za
 vnoremap <space> zf
 
-" ale
-" let g:ale_lint_on_text_changed = 0
-" let g:ale_lint_on_enter = 0
-" let g:ale_lint_on_save = 1
-let g:ale_fixers = {
-\    'python': ['autopep8']
-\}
-let g:ale_python_autopep8_options = '-v -a -a -a --max-line-length=79'
-let g:ale_linters = {
-\   'python': ['flake8', 'pylint'],
-\   'zsh': ['shell'],
-\}
-
 " vim-markdown
 let g:vim_markdown_no_default_key_mappings = 1
 
 " NERDTree
 nnoremap <silent> <F5> :NERDTree<CR>
-
-"*****************************************************************************
-"" Visual Setting
-"*****************************************************************************
-
-
-
 
 "*****************************************************************************
 "" Plug setting
@@ -190,7 +186,7 @@ let g:airline_skip_empty_sections = 1
 let g:airline_symbols = get(g:, 'airline_symbols', {})
 let g:airline_symbols.space = "\ua0"
 
-" if !exists('g:airline_powerline_fonts')
+if !exists('g:airline_powerline_fonts')
 " unicode symbols
   let g:airline_left_sep = '»'
   let g:airline_left_sep = '▶'
@@ -204,14 +200,14 @@ let g:airline_symbols.space = "\ua0"
   let g:airline_symbols.maxlinenr = ''
   let g:airline_symbols.maxlinenr = '㏑'
   let g:airline_symbols.branch = '⎇'
-  let g:airline_symbols.paste = 'PASTE'
+  " let g:airline_symbols.paste = 'PASTE'
   " let g:airline_symbols.paste = 'ρ'
   " let g:airline_symbols.paste = 'Þ'
   " let g:airline_symbols.paste = '∥'
   let g:airline_symbols.spell = 'Ꞩ'
   let g:airline_symbols.notexists = 'Ɇ'
   let g:airline_symbols.whitespace = 'Ξ'
-" else
+else
 " powerline symbols
   let g:airline_left_sep = ''
   let g:airline_left_alt_sep = ''
@@ -222,7 +218,7 @@ let g:airline_symbols.space = "\ua0"
   let g:airline_symbols.linenr = '☰ '
   let g:airline_symbols.maxlinenr = ''
   let g:airline_symbols.dirty='⚡'
-" endif
+endif
 
 " indentLine
 let g:indentLine_enabled = 0
@@ -292,6 +288,19 @@ let g:mkdp_preview_options = {
 """ Custom configs
 "*****************************************************************************
 " python
+" ale
+" let g:ale_lint_on_text_changed = 0
+" let g:ale_lint_on_enter = 0
+" let g:ale_lint_on_save = 1
+let g:ale_fixers = {
+\    'python': ['autopep8']
+\}
+let g:ale_python_autopep8_options = '-v -a -a -a --max-line-length=79'
+let g:ale_linters = {
+\   'python': ['flake8', 'pylint'],
+\   'zsh': ['shell'],
+\}
+
 " vim-python
 augroup vimrc-python
   autocmd!
@@ -299,6 +308,10 @@ augroup vimrc-python
       \ formatoptions+=croq softtabstop=4
       \ cinwords=if,elif,else,for,while,try,except,finally,def,class,with
 augroup END
+
+" Multi-lines comment
+syntax region comment start=/"""/ end=/"""/
+syntax region comment start=/'''/ end=/'''/
 
 " YAML
 " au! BufNewFile,BufReadPost *.{yaml,yml} set filetype=yaml foldmethod=indent
