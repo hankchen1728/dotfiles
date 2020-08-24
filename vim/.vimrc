@@ -33,35 +33,6 @@ if !&scrolloff
     set scrolloff=5
 endif
 
-"*****************************************************************************
-"" Visual Setting
-"*****************************************************************************
-
-" color/colorscheme/syntax
-set background=dark
-set synmaxcol=150
-set t_Co=256               " 256 colors
-" set term=xterm-256color
-colorscheme monokai-bold
-
-" conceal
-set conceallevel=1
-"nnoremap <Space>c :setlocal conceallevel=<c-r>=&conceallevel == 0 ? '2' : '0'<cr><cr>
-
-set hlsearch    " Highlight the search
-set incsearch   " incremental search
-hi Search cterm=reverse ctermbg=none ctermfg=none           " Search match
-hi CursorLineNr cterm=bold ctermfg=Green ctermbg=none       " Cursor Line Number
-hi CursorLine cterm=none ctermbg=094 ctermfg=none           " Cursor Line
-hi Comment ctermfg=087
-hi String ctermfg=214
-hi Visual cterm=bold ctermbg=Grey guibg=Grey40              " Selected block
-
-" High light unwanted spaces in end of line
-highlight ExtraWhitespace ctermbg=darkred guibg=darkcyan
-autocmd BufEnter * if &ft != 'help' | match ExtraWhitespace /\s\+$/ | endif
-autocmd BufEnter * if &ft == 'help' | match none /\s\+$/ | endif
-
 
 "*****************************************************************************
 "" Vim-PLug core
@@ -141,6 +112,35 @@ call plug#end()
 
 " Required:
 filetype plugin indent on
+
+"*****************************************************************************
+"" Visual Setting
+"*****************************************************************************
+
+" color/colorscheme/syntax
+set background=dark
+set synmaxcol=150
+set t_Co=256               " 256 colors
+" set term=xterm-256color
+colorscheme monokai-bold
+
+" conceal
+set conceallevel=1
+"nnoremap <Space>c :setlocal conceallevel=<c-r>=&conceallevel == 0 ? '2' : '0'<cr><cr>
+
+set hlsearch    " Highlight the search
+set incsearch   " incremental search
+hi Search cterm=reverse ctermbg=none ctermfg=none           " Search match
+hi CursorLineNr cterm=bold ctermfg=Green ctermbg=none       " Cursor Line Number
+hi CursorLine cterm=none ctermbg=094 ctermfg=none           " Cursor Line
+hi Comment ctermfg=087
+hi String ctermfg=214
+hi Visual cterm=bold ctermbg=Grey guibg=Grey40              " Selected block
+
+" High light unwanted spaces in end of line
+highlight ExtraWhitespace ctermbg=darkred guibg=darkcyan
+autocmd BufEnter * if &ft != 'help' | match ExtraWhitespace /\s\+$/ | endif
+autocmd BufEnter * if &ft == 'help' | match none /\s\+$/ | endif
 
 "*****************************************************************************
 "" Mappings
