@@ -22,7 +22,10 @@ set cindent                " auto indent
 set hidden                 " hidden unsaved buffers instead of closing them
 set wrap                   " line wrap
 set backspace=indent,eol,start
+set virtualedit=all        " allows pacing the cursor to any column
 set clipboard=unnamedplus  " use system's clipboard
+set splitbelow
+set splitright
 " set ambiwidth=double       " Double char width
 
 " scroll offset(line numbers)
@@ -96,6 +99,9 @@ Plug 'jistr/vim-nerdtree-tabs'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'tpope/vim-fugitive'                                       " git helper for vim
+" Plug 'tpope/vim-capslock'                                       " caps-lock handler
+" Plug 'suxpert/vimcaps'                                          " caps-lock handler
+Plug 'junegunn/limelight.vim'                                 " hyperfocus-writing in Vim
 Plug 'w0rp/ale'
 Plug 'google/vim-searchindex'                                   " Search index helper
 
@@ -115,6 +121,7 @@ Plug 'jmcantrell/vim-virtualenv'
 Plug 'godlygeek/tabular', { 'for': 'markdown' }
 Plug 'plasticboy/vim-markdown', { 'for': 'markdown' }
 Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug'] }
+Plug 'iamcco/mathjax-support-for-mkdp'                        " mathjax support for markdown-preview.vim plugin
 
 " csv layout
 Plug 'chrisbra/csv.vim'
@@ -140,10 +147,16 @@ filetype plugin indent on
 nnoremap <silent> <F2> :set invpaste paste?<CR>
 set pastetoggle=<F2>
 
+" toggle the 'virtualedit'
+nmap ve :let &virtualedit=&virtualedit=="" ? "all" : "" \| set virtualedit?<CR>
+
+" split window
+nnoremap <Space>s :vsp \| b<Space>
+
 " Switch Buffer in Normal mode
 nnoremap <C-J> :bn<CR>
 nnoremap <C-K> :bp<CR>
-nnoremap <Space><Tab> :b#<CR>    " switch to previous edited buffer
+nnoremap <Space><Tab> :b#<CR>                              " switch to previous edited buffer
 
 " { Escape key mapping } {{{
 nnoremap q  <Esc>
@@ -152,11 +165,11 @@ vnoremap q  <Esc>
 inoremap qq <Esc>
 " }}}
 
-
 " Folding
 " set foldmethod=indent
 set foldmethod=manual
 nnoremap <space> za
+nnoremap zp vipzf                                          " fold the current paragraph
 vnoremap <space> zf
 
 " vim-markdown
@@ -194,10 +207,10 @@ if !exists('g:airline_powerline_fonts')
   let g:airline_right_sep = '◀'
   let g:airline_symbols.crypt = '🔒'
   let g:airline_symbols.linenr = '☰ '
-  let g:airline_symbols.linenr = '␊'
-  let g:airline_symbols.linenr = '␤'
-  let g:airline_symbols.linenr = '¶'
-  let g:airline_symbols.maxlinenr = ''
+  " let g:airline_symbols.linenr = '␊'
+  " let g:airline_symbols.linenr = '␤'
+  " let g:airline_symbols.linenr = '¶'
+  " let g:airline_symbols.maxlinenr = ''
   let g:airline_symbols.maxlinenr = '㏑'
   let g:airline_symbols.branch = '⎇'
   " let g:airline_symbols.paste = 'PASTE'
@@ -225,6 +238,11 @@ let g:indentLine_enabled = 0
 "let g:indentLine_setColors = 0
 let g:indentLine_color_term = 50
 let g:indentLine_char_list = ['|', '¦', '┆', '┊']
+
+" Limelight
+let g:limelight_conceal_ctermfg = 'gray'
+let g:limelight_conceal_ctermfg = 240
+let g:limelight_paragraph_span  = 1
 
 
 " NERDCommenter
@@ -310,8 +328,8 @@ augroup vimrc-python
 augroup END
 
 " Multi-lines comment
-syntax region comment start=/"""/ end=/"""/
-syntax region comment start=/'''/ end=/'''/
+autocmd FileType python syntax region comment start=/"""/ end=/"""/
+autocmd FileType python syntax region comment start=/'''/ end=/'''/
 
 " YAML
 " au! BufNewFile,BufReadPost *.{yaml,yml} set filetype=yaml foldmethod=indent
