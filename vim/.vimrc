@@ -108,6 +108,9 @@ Plug 'google/vim-searchindex'                                   " Search index h
 " Plug 'tpope/vim-commentary'                                   " comment stuff out
 Plug 'scrooloose/nerdcommenter'                                 " vim plugin for intensely orgasmic commenting
 
+" Colorscheme
+Plug 'mcmartelle/vim-monokai-bold'
+
 " Python
 "" Python Bundle
 " Remember to install 'jedi' package in python3
