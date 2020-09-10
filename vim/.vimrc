@@ -22,7 +22,8 @@ set cindent                " auto indent
 set hidden                 " hidden unsaved buffers instead of closing them
 set wrap                   " line wrap
 set backspace=indent,eol,start
-set virtualedit=all        " allows pacing the cursor to any column
+set virtualedit=
+" set virtualedit=all        " allows pacing the cursor to any column
 set clipboard=unnamedplus  " use system's clipboard
 set splitbelow
 set splitright
@@ -69,12 +70,16 @@ Plug 'scrooloose/nerdtree'
 Plug 'jistr/vim-nerdtree-tabs'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
+Plug 'majutsushi/tagbar'
 Plug 'tpope/vim-fugitive'                                       " git helper for vim
 " Plug 'tpope/vim-capslock'                                       " caps-lock handler
 " Plug 'suxpert/vimcaps'                                          " caps-lock handler
-Plug 'junegunn/limelight.vim'                                 " hyperfocus-writing in Vim
-Plug 'w0rp/ale'
+Plug 'junegunn/limelight.vim'                                   " hyperfocus-writing in Vim
+Plug 'w0rp/ale'                                                 " linter
 Plug 'google/vim-searchindex'                                   " Search index helper
+Plug 'kalekundert/vim-coiled-snake'                             " folding tool
+Plug 'Konfekt/FastFold'
+Plug 'FooSoft/vim-argwrap'                                      " Wrap and unwrap function arguments, lists, and dictionaries in Vim.
 
 " Plug 'tpope/vim-commentary'                                   " comment stuff out
 Plug 'scrooloose/nerdcommenter'                                 " vim plugin for intensely orgasmic commenting
@@ -88,14 +93,17 @@ Plug 'mcmartelle/vim-monokai-bold'
 Plug 'davidhalter/jedi-vim'
 Plug 'raimon49/requirements.txt.vim', {'for': 'requirements'}
 Plug 'ervandew/supertab'                                        " use <tab> to completion
-Plug 'Yggdroot/indentLine'                                      " indectline
+Plug 'Yggdroot/indentLine'                                      " indentline
 Plug 'jmcantrell/vim-virtualenv'
 
 " Markdown
 Plug 'godlygeek/tabular', { 'for': 'markdown' }
 Plug 'plasticboy/vim-markdown', { 'for': 'markdown' }
-Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug'] }
-Plug 'iamcco/mathjax-support-for-mkdp'                        " mathjax support for markdown-preview.vim plugin
+" Avoid lower vim version
+if (v:version >= 800)
+    Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
+    Plug 'iamcco/mathjax-support-for-mkdp'                      " mathjax support for markdown-preview.vim plugin
+endif
 
 " csv layout
 Plug 'chrisbra/csv.vim'
@@ -150,6 +158,9 @@ autocmd BufEnter * if &ft == 'help' | match none /\s\+$/ | endif
 nnoremap <silent> <F2> :set invpaste paste?<CR>
 set pastetoggle=<F2>
 
+" Search
+nnoremap ss *                                              " search the current selected word under cursor
+
 " toggle the 'virtualedit'
 nmap ve :let &virtualedit=&virtualedit=="" ? "all" : "" \| set virtualedit?<CR>
 
@@ -160,6 +171,7 @@ nnoremap <Space>s :vsp \| b<Space>
 nnoremap <C-J> :bn<CR>
 nnoremap <C-K> :bp<CR>
 nnoremap <Space><Tab> :b#<CR>                              " switch to previous edited buffer
+nnoremap bd :bdelete
 
 " { Escape key mapping } {{{
 nnoremap q  <Esc>
@@ -170,10 +182,14 @@ inoremap qq <Esc>
 
 " Folding
 " set foldmethod=indent
+set nofoldenable                                           " default no folding
 set foldmethod=manual
 nnoremap <space> za
 nnoremap zp vipzf                                          " fold the current paragraph
 vnoremap <space> zf
+
+" vim-argwrap
+nnoremap <silent> <Space>a :ArgWrap<CR>
 
 " vim-markdown
 let g:vim_markdown_no_default_key_mappings = 1
@@ -247,6 +263,10 @@ let g:limelight_conceal_ctermfg = 'gray'
 let g:limelight_conceal_ctermfg = 240
 let g:limelight_paragraph_span  = 1
 
+" NERDTree
+autocmd StdinReadPre * let s:std_in=1
+autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
+
 
 " NERDCommenter
 let g:NERDSpaceDelims            = 1 " Add spaces after comment delimiters by default
@@ -276,10 +296,15 @@ let g:jedi#show_call_signatures = "2"
 let g:jedi#use_tabs_not_buffers = 1
 let g:jedi#completions_command = "<C-N>"
 let g:jedi#smart_auto_mappings = 0
-let g:SuperTabDefaultCompletionType = "context"
 
 autocmd FileType python set omnifunc=jedi#completions
 autocmd FileType python setlocal completeopt-=preview " disable docstring preview window popup
+
+" Supertab
+let g:SuperTabDefaultCompletionType = "context"
+" let g:SuperTabContextDefaultCompletionType = "<c-x><c-o>"
+" let g:SuperTabLongestEnhanced = 1
+" let g:SuperTabCrMapping = 0
 
 " Markdown preview
 let g:mkdp_auto_start = 0 				  " do NOT automatically open the preview window
@@ -318,7 +343,7 @@ let g:ale_fixers = {
 \}
 let g:ale_python_autopep8_options = '-v -a -a -a --max-line-length=79'
 let g:ale_linters = {
-\   'python': ['flake8', 'pylint'],
+\   'python': ['flake8', 'pylint', 'mypy'],
 \   'zsh': ['shell'],
 \}
 
@@ -328,6 +353,7 @@ augroup vimrc-python
   autocmd FileType python setlocal expandtab shiftwidth=4 tabstop=8 colorcolumn=79
       \ formatoptions+=croq softtabstop=4
       \ cinwords=if,elif,else,for,while,try,except,finally,def,class,with
+  autocmd FileType python let g:SuperTabDefaultCompletionType = "<c-x><c-o>"
 augroup END
 
 " Multi-lines comment
