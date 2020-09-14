@@ -29,4 +29,4 @@ sudo make install -j8
 
 # Removing the source code
 cd ../../..
-rm -rf $tmp_dir
+sudo rm -rf $tmp_dir
