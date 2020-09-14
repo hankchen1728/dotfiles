@@ -41,3 +41,8 @@ for i in {0..255} ; do
     fi
 done
 ```
+See [Bash tips: Colors and formatting](https://misc.flogisoft.com/bash/tip_colors_and_formatting) for details.
+
+### Newer Tmux
+For higher `tmux>2.9`, please see [issue](https://github.com/tmux/tmux/issues/1689)
+for setting **options**
