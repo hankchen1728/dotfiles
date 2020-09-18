@@ -161,6 +161,9 @@ set pastetoggle=<F2>
 " Search
 nnoremap ss *                                              " search the current selected word under cursor
 
+" Insert completion
+inoremap <C-f> <C-x><C-f>
+
 " toggle the 'virtualedit'
 nmap ve :let &virtualedit=&virtualedit=="" ? "all" : "" \| set virtualedit?<CR>
 
@@ -174,9 +177,9 @@ nnoremap <Space><Tab> :b#<CR>                              " switch to previous 
 nnoremap bd :bdelete
 
 " { Escape key mapping } {{{
-nnoremap q  <Esc>
+" nnoremap q  <Esc>
 nnoremap qq <Esc>
-vnoremap q  <Esc>
+" vnoremap q  <Esc>
 inoremap qq <Esc>
 " }}}
 
@@ -302,7 +305,6 @@ autocmd FileType python setlocal completeopt-=preview " disable docstring previe
 
 " Supertab
 let g:SuperTabDefaultCompletionType = "context"
-" let g:SuperTabContextDefaultCompletionType = "<c-x><c-o>"
 " let g:SuperTabLongestEnhanced = 1
 " let g:SuperTabCrMapping = 0
 
