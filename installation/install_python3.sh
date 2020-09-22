@@ -80,11 +80,13 @@ if [ ! -d Python-${PYVERSION} ]; then
     tar -zxvf Python-${PYVERSION}.tgz
 fi
 
+PREFIX=${HOME}/local/modules/Cellar/python3/${PYVERSION}/
 
 cd Python-${PYVERSION}/
-./configure --prefix=${HOME}/local/modules/Cellar/python3/${PYVERSION}/ \
+./configure --prefix=$PREFIX \
     --enable-optimizations \
     --enable-shared \
+    LDFLAGS="-Wl,--rpath=${PREFIX}lib" \
     --disable-option-checking \
     --with-ssl \
     --with-ensurepip
