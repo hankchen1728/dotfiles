@@ -84,6 +84,7 @@ fi
 cd Python-${PYVERSION}/
 ./configure --prefix=${HOME}/local/modules/Cellar/python3/${PYVERSION}/ \
     --enable-optimizations \
+    --enable-shared \
     --disable-option-checking \
     --with-ssl \
     --with-ensurepip
