@@ -91,8 +91,8 @@ cd Python-${PYVERSION}/
     --with-ssl \
     --with-ensurepip
 
-make -j16
-make -j16 install
+make -j8
+make -j8 install
 
 #PYTHON=${HOME}/local/modules/Cellar/python3/${PYVERSION}/bin/python3
 #$PYTHON -m ensurepip
