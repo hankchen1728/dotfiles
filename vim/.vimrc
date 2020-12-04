@@ -29,6 +29,10 @@ set splitbelow
 set splitright
 " set ambiwidth=double       " Double char width
 
+" spell check
+setlocal spell spelllang=en_us
+set spell!
+
 " scroll offset(line numbers)
 if !&scrolloff
     set scrolloff=5
@@ -162,7 +166,7 @@ set pastetoggle=<F2>
 nnoremap ss *                                              " search the current selected word under cursor
 
 " Insert completion
-inoremap <C-f> <C-x><C-f>
+inoremap <C-f> <C-x><C-f>                                  " File name search
 
 " toggle the 'virtualedit'
 nmap ve :let &virtualedit=&virtualedit=="" ? "all" : "" \| set virtualedit?<CR>
@@ -179,7 +183,7 @@ nnoremap bd :bdelete
 " { Escape key mapping } {{{
 " nnoremap q  <Esc>
 nnoremap qq <Esc>
-" vnoremap q  <Esc>
+vnoremap q  <Esc>
 inoremap qq <Esc>
 " }}}
 
@@ -200,6 +204,22 @@ let g:vim_markdown_no_default_key_mappings = 1
 " NERDTree
 nnoremap <silent> <F5> :NERDTree<CR>
 
+" brackets completion
+inoremap [ []<ESC>i
+inoremap {<CR> {<CR>}<ESC>ko
+inoremap { {}<ESC>i
+inoremap ( ()<ESC>i
+
+" quotes completion
+inoremap " ""<ESC>i
+inoremap ' ''<ESC>i
+
+" list history of command
+noremap ;; q:
+
+" Show all buffers
+:nnoremap <Leader>b :buffers<CR>:buffer<Space>
+
 "*****************************************************************************
 "" Plug setting
 "*****************************************************************************
@@ -208,13 +228,27 @@ nnoremap <silent> <F5> :NERDTree<CR>
 " vim-airline
 set laststatus=2                                           " set status line
 let g:airline_theme = 'powerlineish'
-let g:airline#extensions#branch#enabled = 1
-let g:airline#extensions#ale#enabled = 1
+let g:airline#extensions#branch#enabled = 1                " Show current git branch
+let g:airline#extensions#ale#enabled = 1                   " ALE syntax
 let g:airline_powerline_fonts = 1                          " enable powerline-fonts
 let g:airline#extensions#tabline#enabled = 1
-let g:airline#extensions#tabline#fnamemod = ':t'
+let g:airline#extensions#tabline#fnamemod = ':t'           " Show file name only
+let g:airline#extensions#tabline#show_tab_nr = 1
+let g:airline#extensions#tabline#tab_nr_type = 1
 let g:airline#extensions#tabline#buffer_nr_show=1          " Show the index of buffer
-let g:airline#extensions#bufferline#enabled = 1
+let g:airline#extensions#tabline#buffer_idx_mode = 0
+
+nmap <leader>1 <Plug>AirlineSelectTab1
+nmap <leader>2 <Plug>AirlineSelectTab2
+nmap <leader>3 <Plug>AirlineSelectTab3
+nmap <leader>4 <Plug>AirlineSelectTab4
+nmap <leader>5 <Plug>AirlineSelectTab5
+nmap <leader>6 <Plug>AirlineSelectTab6
+nmap <leader>7 <Plug>AirlineSelectTab7
+nmap <leader>8 <Plug>AirlineSelectTab8
+nmap <leader>9 <Plug>AirlineSelectTab9
+
+" let g:airline#extensions#bufferline#enabled = 1
 " let g:airline#extensions#tagbar#enabled = 1
 let g:airline_skip_empty_sections = 1
 
@@ -296,7 +330,8 @@ let g:jedi#documentation_command = "K"
 let g:jedi#usages_command = "<leader>n"
 let g:jedi#rename_command = "<leader>r"
 let g:jedi#show_call_signatures = "2"
-let g:jedi#use_tabs_not_buffers = 1
+" let g:jedi#use_tabs_not_buffers = 0
+let g:jedi#use_splits_not_buffers = "right"
 let g:jedi#completions_command = "<C-N>"
 let g:jedi#smart_auto_mappings = 0
 
@@ -356,11 +391,11 @@ augroup vimrc-python
       \ formatoptions+=croq softtabstop=4
       \ cinwords=if,elif,else,for,while,try,except,finally,def,class,with
   autocmd FileType python let g:SuperTabDefaultCompletionType = "<c-x><c-o>"
+  " Multi-lines comment
+  autocmd FileType python syntax region comment start=/"""/ end=/"""/
+  autocmd FileType python syntax region comment start=/'''/ end=/'''/
 augroup END
 
-" Multi-lines comment
-autocmd FileType python syntax region comment start=/"""/ end=/"""/
-autocmd FileType python syntax region comment start=/'''/ end=/'''/
 
 " YAML
 " au! BufNewFile,BufReadPost *.{yaml,yml} set filetype=yaml foldmethod=indent
