@@ -166,7 +166,7 @@ set pastetoggle=<F2>
 nnoremap ss *                                              " search the current selected word under cursor
 
 " Insert completion
-inoremap <C-f> <C-x><C-f>                                  " File name search
+inoremap <C-f> <C-x><C-f>
 
 " toggle the 'virtualedit'
 nmap ve :let &virtualedit=&virtualedit=="" ? "all" : "" \| set virtualedit?<CR>
