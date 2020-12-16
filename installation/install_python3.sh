@@ -12,13 +12,13 @@ read -p "What python version do you want? [Default: 3.6.4] " pyversion
 PYVERSION=${pyversion:-'3.6.4'}
 
 # Function to whether a package installed
-function get_package {
+get_package () {
     local pkg_name="$1"
     dpkg -s $pkg_name &> /dev/null
 
     if [ $? -ne 0 ];
     then
-        echo "${pkg_name} is not installed."
+        echo "${pkg_name} is not installed.";
         return 1
     else
         return 0
