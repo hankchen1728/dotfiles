@@ -23,8 +23,18 @@ set hidden                 " hidden unsaved buffers instead of closing them
 set wrap                   " line wrap
 set backspace=indent,eol,start
 set virtualedit=
+set re=1
 " set virtualedit=all        " allows pacing the cursor to any column
-set clipboard=unnamedplus  " use system's clipboard
+
+" copy/paste/clipboard
+if has('clipboard')
+    if has('unnamedplus') " + register
+        set clipboard=unnamed,unnamedplus
+    else " On mac and Windows, use * register for copy-paste
+        set clipboard=unnamed
+    endif
+endif
+
 set splitbelow
 set splitright
 " set ambiwidth=double       " Double char width
@@ -140,6 +150,9 @@ colorscheme monokai-bold
 set conceallevel=1
 "nnoremap <Space>c :setlocal conceallevel=<c-r>=&conceallevel == 0 ? '2' : '0'<cr><cr>
 
+set ignorecase
+set smartcase         " search ignorecasely
+set wildignorecase    " ignore case when doing completion
 set hlsearch    " Highlight the search
 set incsearch   " incremental search
 hi Search cterm=reverse ctermbg=none ctermfg=none           " Search match
@@ -162,8 +175,15 @@ autocmd BufEnter * if &ft == 'help' | match none /\s\+$/ | endif
 nnoremap <silent> <F2> :set invpaste paste?<CR>
 set pastetoggle=<F2>
 
-" Search
-nnoremap ss *                                              " search the current selected word under cursor
+" command mode mapping
+" Mapping Option binding keys for Mac Terminal
+execute "set <M-b>=b"
+execute "set <M-f>=f"
+cnoremap <M-b>    <S-Left>
+cnoremap <M-f>    <S-Right>
+" cnoremap <ESC>b   <S-Left>
+" cnoremap <ESC>f   <S-Right>
+cnoremap <C-a>    <Home>
 
 " Insert completion
 inoremap <C-f> <C-x><C-f>
@@ -175,25 +195,48 @@ nmap ve :let &virtualedit=&virtualedit=="" ? "all" : "" \| set virtualedit?<CR>
 nnoremap <Space>s :vsp \| b<Space>
 
 " Switch Buffer in Normal mode
-nnoremap <C-J> :bn<CR>
-nnoremap <C-K> :bp<CR>
+" nnoremap <C-J> :bn<CR>
+" nnoremap <C-K> :bp<CR>
+nnoremap bj :bn<CR>
+nnoremap bk :bp<CR>
 nnoremap <Space><Tab> :b#<CR>                              " switch to previous edited buffer
 nnoremap bd :bdelete
+
+" Search
+nnoremap ss *                                              " search the current selected word under cursor
+" next/previous search
+vnoremap n y/<C-r>"<CR>
+vnoremap N y/<C-r>"<CR>NN
+vnoremap C y/<C-r>"<CR>Ncgn
+
+" grep search and show on quickfix
+vnoremap <C-f> y:vimgrep <C-r>" %<CR> \| :copen <CR>
+nnoremap <C-f> :vimgrep <C-r>/ %<CR> \| :copen <CR>
 
 " { Escape key mapping } {{{
 " nnoremap q  <Esc>
 nnoremap qq <Esc>
-vnoremap q  <Esc>
-inoremap qq <Esc>
+	vnoremap q  <Esc>
+	inoremap qq <Esc>
 " }}}
 
 " Folding
 " set foldmethod=indent
 set nofoldenable                                           " default no folding
 set foldmethod=manual
-nnoremap <space> za
-nnoremap zp vipzf                                          " fold the current paragraph
-vnoremap <space> zf
+" nnoremap <space> za
+" nnoremap zp vipzf                                          " fold the current paragraph
+function! FoldOrSelect()
+    if foldlevel(line('.')) == 0
+        call feedkeys("vip")
+    else
+        call feedkeys("za")
+    endif
+endfunction
+
+" Press Enter to toggle folding except in quickfix
+nnoremap <expr> <CR> &buftype ==# 'quickfix' ? "\<CR>" : ":call FoldOrSelect()<CR>"
+vnoremap <CR> zf
 
 " vim-argwrap
 nnoremap <silent> <Space>a :ArgWrap<CR>
@@ -316,6 +359,14 @@ let g:NERDCustomDelimiters       = {'c':{'left':'//'}, 'python':{'left':'#'}, 'b
 " vim-markdown
 let g:vim_markdown_toc_autofit      = 1
 let g:vim_markdown_folding_disabled = 1
+
+" vim-csv
+let g:csv_no_progress = 1
+let g:csv_strict_columns = 1
+let g:csv_start = 1
+let g:csv_end = 100
+let g:csv_nomap_up=1
+let g:csv_nomap_down=1
 
 " virtualenv
 let g:virtualenv_auto_activate = 1
