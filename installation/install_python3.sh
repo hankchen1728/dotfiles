@@ -1,7 +1,7 @@
 # This script is used to install python3 from source on Ubuntu
-# Support python3 version: 3.6 and 3.7
+# Support python3 version: 3.6, 3.7 and 3.8
 # Author: Junting Chen
-# Last update: 2020/02/29
+# Last update: 2021/02/01
 
 if [ ! -d ${HOME}/tmp ]; then
     mkdir ${HOME}/tmp
@@ -47,10 +47,11 @@ then
     # pkg_list="${pkg_list} libgdbm-dev libdb5.3-dev tk-dev"
 elif [[ $PYVERSION == 3.8* ]];
 then
-    pkg_list="make build-essential libssl-dev
-        zlib1g-dev libncurses5-dev libreadline-dev
-        libnss3-dev libffi-dev"
-    # pkg_list="${pkg_list} libgdbm-dev libdb5.3-dev tk-dev"
+    pkg_list="make build-essential
+        libreadline-dev libncursesw5-dev libssl-dev
+        zlib1g-dev libbz2-dev libsqlite3-dev
+        libgdbm-dev libc6-dev libffi-dev"
+    # pkg_list="${pkg_list} uuid-dev libdb5.3-dev tk-dev"
 else
     echo "Unsupport python version `$PYVERSION`"
     exit 1
@@ -82,11 +83,13 @@ fi
 
 PREFIX=${HOME}/local/modules/Cellar/python3/${PYVERSION}/
 
+# If you have compiled some library yourself, you might need to specify the path to header files (eg. $HOME/.local/include)
 cd Python-${PYVERSION}/
 ./configure --prefix=$PREFIX \
     --enable-optimizations \
     --enable-shared \
     LDFLAGS="-Wl,--rpath=${PREFIX}lib" \
+    CPPFLAGS="-I ${HOME}/.local/include" \
     --disable-option-checking \
     --with-ssl \
     --with-ensurepip
