@@ -48,14 +48,15 @@ if !&scrolloff
     set scrolloff=5
 endif
 
+" let s:white       = { "gui": "#E8E8E8", "cterm": "254" }
 
 "*****************************************************************************
 "" Vim-PLug core
 "*****************************************************************************
-let vimplug_exists=expand('~/.vim/autoload/plug.vim')
+let vimplug_exists=expand('~/.local/share/nvim/site/autoload/plug.vim')
 
 let g:vim_bootstrap_langs = "c,html,javascript,python,ruby"
-let g:vim_bootstrap_editor = "vim"				" nvim or vim
+let g:vim_bootstrap_editor = "nvim"				" nvim or vim
 
 if !filereadable(vimplug_exists)
   if !executable("curl")
@@ -70,14 +71,13 @@ if !filereadable(vimplug_exists)
   autocmd VimEnter * PlugInstall
 endif
 
-" Required:
-call plug#begin(expand('~/.vim/plugged'))
-
 "*****************************************************************************
 "" Plug install packages
 "*****************************************************************************
 " Colorsheme
 " Plug 'crusoexia/vim-monokai'
+
+call plug#begin('~/.local/share/nvim/plugged')
 
 " General use
 Plug 'scrooloose/nerdtree'
@@ -99,7 +99,7 @@ Plug 'FooSoft/vim-argwrap'                                      " Wrap and unwra
 Plug 'scrooloose/nerdcommenter'                                 " vim plugin for intensely orgasmic commenting
 
 " Colorscheme
-" Plug 'mcmartelle/vim-monokai-bold'
+Plug 'mcmartelle/vim-monokai-bold'
 
 " Python
 "" Python Bundle
@@ -113,11 +113,8 @@ Plug 'jmcantrell/vim-virtualenv'
 " Markdown
 Plug 'godlygeek/tabular', { 'for': 'markdown' }
 Plug 'plasticboy/vim-markdown', { 'for': 'markdown' }
-" Avoid lower vim version
-if (v:version >= 800)
-    Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
-    Plug 'iamcco/mathjax-support-for-mkdp'                      " mathjax support for markdown-preview.vim plugin
-endif
+Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
+Plug 'iamcco/mathjax-support-for-mkdp'                      " mathjax support for markdown-preview.vim plugin
 
 " csv layout
 Plug 'chrisbra/csv.vim'
@@ -177,8 +174,8 @@ set pastetoggle=<F2>
 
 " command mode mapping
 " Mapping Option binding keys for Mac Terminal
-execute "set <M-b>=b"
-execute "set <M-f>=f"
+" execute "set <M-b>=b"
+" execute "set <M-f>=f"
 cnoremap <M-b>    <S-Left>
 cnoremap <M-f>    <S-Right>
 " cnoremap <ESC>b   <S-Left>
@@ -418,6 +415,7 @@ let g:mkdp_preview_options = {
     \ 'flowchart_diagrams': {}
     \ }
 
+let g:monokai_term_italic = 1
 "*****************************************************************************
 """ Custom configs
 "*****************************************************************************
