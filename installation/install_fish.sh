@@ -3,7 +3,7 @@ install_dir=${1:-"${HOME}/.local/"}
 # Clone the git repository
 git clone https://github.com/fish-shell/fish-shell.git
 
-# Cd into the git directory
+# Change working dir into the git directory
 cd ./fish-shell
 
 # make and install
