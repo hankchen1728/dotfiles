@@ -4,20 +4,31 @@ if [ ! -d ${HOME}/tmp ]; then
 fi
 
 cd ${HOME}/tmp
-# Clone the git repo source code
-git clone https://github.com/tmux/tmux.git
-cd tmux
-bash autogen.sh
-# Configuration and Installation
+rm -rf ./tmux
+
+# ===== setting path =====
 local_DIR=${HOME}/.local
 # export LD_LIBRARY_PRELOAD=${DIR}/lib
+# ========================
+
+# Download the tarball
+VERSION=${1:-"3.1"}
+wget https://github.com/tmux/tmux/releases/download/$VERSION/tmux-$VERSION.tar.gz
+tar -zxf tmux-$VERSION.tar.gz
+rm tmux-$VERSION.tar.gz
+
+# Configuration and Installation
+mv tmux-$VERSION tmux && cd ./tmux
+# bash autogen.sh
 PKG_CONFIG_PATH=$local_DIR/lib/pkgconfig:$PKG_CONFIG_PATH ./configure \
-    --prefix ${HOME}/.local
+    --prefix ${HOME}/.local --enable-static
     # LIBEVENT_CFLAGS="-I$local_DIR/include" \
     # LIBEVENT_LIBS="-L$local_DIR/lib" \
-    # LIBTINFO_CFLAGS="-I$local_DIR/include" \
+    # LIBTINFO_CFLAGS="-I$local_DIR/include/ncurses" \
     # LIBTINFO_LIBS="-L$local_DIR/lib"
-make -j 8
-make install -j 8
+    # LIBNCURSES_CFLAGS="-I$local_DIR/include/ncurses" \
+    # LIBNCURSES_LIBS="-L$local_DIR/lib"
+make -j8 && make install
 
-cd .. && rm -rf ${HOME}/tmp/tmux
+# remove the source code
+cd ${HOME} && rm -rf ${HOME}/tmp/tmux
