@@ -1,192 +1,347 @@
-" Basic Configs
-syntax on
-filetype on
-set nocompatible
-set ruler                  " show file name, lines, etc.
-set showcmd                " show uncomplete command
-set history=200
-set showmode
-set autochdir              " automatically change to the directory of the file opened
-set wildmenu               " command line completion
-set cursorline             " hightline the current line
-set number relativenumber  " show line number
-set showmatch              " match parentheses
-set diffopt+=iwhite        " ignore white space in vimdiff
-set mouse=a                " enable mouse
-set encoding=utf-8
-set expandtab              " change tab to space
-set smarttab               " add shiftwidth spaces at start of line
-set tabstop=4              " set tab to 4-spaces-wide
-set shiftwidth=4           " width of tab
-set cindent                " auto indent
-set hidden                 " hidden unsaved buffers instead of closing them
-set wrap                   " line wrap
-set backspace=indent,eol,start
-set virtualedit=
-set re=1
-" set virtualedit=all        " allows pacing the cursor to any column
+" { Basic } {{{
+    syntax on
+    syntax sync fromstart
+    set nocompatible
+    set ruler                              " show file name, lines, etc.
+    set showcmd                            " show uncomplete command
+    set history=1000
+    set showmode
+    set autochdir                          " automatically change to the directory of the file opened
+    set wildmenu                           " command line completion
+    set cursorline                         " hightline the current line
+    set number relativenumber              " show line number
+    set showmatch                          " match parentheses
+    set diffopt+=iwhite                    " ignore white space in vimdiff
+    set timeout timeoutlen=600             " set timeout to use double key in imap confortablely
+    set mouse=a                            " enable mouse
+    set encoding=utf-8
+    set hidden                             " hidden unsaved buffers instead of closing them
+    set previewheight=5                    " hight of completion preview
+    set wrap                               " line wrap
+    set backspace=indent,eol,start
+    set virtualedit=
+    set re=1
+    set conceallevel=2                     " concealment
+    " nnoremap <Space>c :setlocal conceallevel=<c-r>=&conceallevel == 0 ? '2' : '0'<cr><cr>
+    " set virtualedit=all        " allows spacing the cursor to any column
+    " set ambiwidth=double       " Double char width
 
-" copy/paste/clipboard
-if has('clipboard')
-    if has('unnamedplus') " + register
-        set clipboard=unnamed,unnamedplus
-    else " On mac and Windows, use * register for copy-paste
-        set clipboard=unnamed
+    " { Clipboard }{{{
+        if has('clipboard')
+            if has('unnamedplus') " + register
+                set clipboard=unnamed,unnamedplus
+            else " On mac and Windows, use * register for copy-paste
+                set clipboard=unnamed
+            endif
+        endif
+    " }}}
+
+    " { Lazyredraw } {{{
+        " For dealing slowly connection or updating
+        " redraw only in need
+        set nolazyredraw
+        " autocmd InsertLeave * set lazyredraw
+        " autocmd InsertEnter * set nolazyredraw
+
+        function! ToggleLazyRedraw()
+            exec 'set lazyredraw!'
+            if &lazyredraw == 0
+                echo 'LazyRedraw off'
+            else
+                echo 'LazyRedraw on'
+            endif
+        endfunction
+        nnoremap <Space>cr :call ToggleLazyRedraw()<CR>
+    " }}}
+
+    " { Tab/spaces } {{{
+
+        set expandtab              " expand tab to spaces
+        set smarttab               " use shiftwidth instead of tabstop at start of lines
+        set tabstop=4              " set tab to 4-spaces-wide
+        set softtabstop=4          " set tab to 4-spaces-wide when editing
+        set shiftwidth=4           " < and > will shift 4 spaces
+
+    " }}}
+
+    " { Indent mode } {{{
+        set autoindent
+        set smartindent
+        " set cindent
+    " }}}
+
+    " spell check
+    setlocal spell spelllang=en_us
+    set spell!
+
+    " scroll offset(line numbers)
+    if !&scrolloff
+        set scrolloff=5
     endif
-endif
+" }}}
 
-set splitbelow
-set splitright
-" set ambiwidth=double       " Double char width
+" { Windows/Buffers settings } {{{
 
-" spell check
-setlocal spell spelllang=en_us
-set spell!
+    " jump between buffers
+    nnoremap <Space><Tab> :b#<CR>
 
-" scroll offset(line numbers)
-if !&scrolloff
-    set scrolloff=5
-endif
+    " resizing
+    nnoremap = <C-w>+
+    nnoremap - <C-w>-
+    nnoremap _ <C-w><
+    nnoremap + <C-w>>
 
+    " navigation
+    nnoremap <Space>h     <C-w>h
+    nnoremap <Space>l     <C-w>l
+    nnoremap <Space>j     <C-w>j
+    nnoremap <Space>k     <C-w>k
+    " nnoremap <Tab>        <C-w><C-p>
+    nnoremap <Space>e     <C-w><C-p>
 
-"*****************************************************************************
-"" Vim-PLug core
-"*****************************************************************************
-let vimplug_exists=expand('~/.vim/autoload/plug.vim')
+    " split window
+    set splitbelow splitright " specify the location
+    nnoremap <Space>s :vsp \| b<Space>
 
-let g:vim_bootstrap_langs = "c,html,javascript,python,ruby"
-let g:vim_bootstrap_editor = "vim"				" nvim or vim
+" }}}
 
-if !filereadable(vimplug_exists)
-  if !executable("curl")
-    echoerr "You have to install curl or first install vim-plug yourself!"
-    execute "q!"
-  endif
-  echo "Installing Vim-Plug..."
-  echo ""
-  silent exec "!\curl -fLo " . vimplug_exists . " --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"
-  let g:not_finish_vimplug = "yes"
+" { Vim-Plug } {{{
+    let vimplug_exists=expand('~/.vim/autoload/plug.vim')
 
-  autocmd VimEnter * PlugInstall
-endif
+    let g:vim_bootstrap_langs = "c,html,javascript,python,ruby"
+    let g:vim_bootstrap_editor = "vim"				" nvim or vim
 
-" Required:
-call plug#begin(expand('~/.vim/plugged'))
+    if !filereadable(vimplug_exists)
+      if !executable("curl")
+        echoerr "You have to install curl or first install vim-plug yourself!"
+        execute "q!"
+      endif
+      echo "Installing Vim-Plug..."
+      echo ""
+      silent exec "!\curl -fLo " . vimplug_exists . " --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"
+      let g:not_finish_vimplug = "yes"
 
-"*****************************************************************************
-"" Plug install packages
-"*****************************************************************************
-" Colorsheme
-" Plug 'crusoexia/vim-monokai'
+      autocmd VimEnter * PlugInstall
+    endif
 
-" General use
-Plug 'scrooloose/nerdtree'
-Plug 'jistr/vim-nerdtree-tabs'
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
-Plug 'majutsushi/tagbar'
-Plug 'tpope/vim-fugitive'                                       " git helper for vim
-" Plug 'tpope/vim-capslock'                                       " caps-lock handler
-" Plug 'suxpert/vimcaps'                                          " caps-lock handler
-Plug 'junegunn/limelight.vim'                                   " hyperfocus-writing in Vim
-Plug 'w0rp/ale'                                                 " linter
-Plug 'google/vim-searchindex'                                   " Search index helper
-Plug 'kalekundert/vim-coiled-snake'                             " folding tool
-Plug 'Konfekt/FastFold'
-Plug 'FooSoft/vim-argwrap'                                      " Wrap and unwrap function arguments, lists, and dictionaries in Vim.
+    " Required:
+    call plug#begin(expand('~/.vim/plugged'))
 
-" Plug 'tpope/vim-commentary'                                   " comment stuff out
-Plug 'scrooloose/nerdcommenter'                                 " vim plugin for intensely orgasmic commenting
+    " General
+    Plug 'scrooloose/nerdtree'
+    Plug 'jistr/vim-nerdtree-tabs'
+    Plug 'vim-airline/vim-airline'
+    Plug 'vim-airline/vim-airline-themes'
+    Plug 'jiangmiao/auto-pairs'                                     " auto pair brackets, parens, quotes
+    Plug 'tpope/vim-surround'                                       " auto surround brackets, parens, quotes
+    " Plug 'majutsushi/tagbar'
+    " Plug 'tpope/vim-fugitive'                                       " git helper for vim
+    " Plug 'junegunn/limelight.vim'                                   " hyperfocus-writing in Vim
+    Plug 'w0rp/ale'                                                 " linter
+    Plug 'google/vim-searchindex'                                   " Search index helper
+    Plug 'kalekundert/vim-coiled-snake'                             " folding tool
+    Plug 'Konfekt/FastFold'
+    Plug 'FooSoft/vim-argwrap'                                      " Wrap and unwrap function arguments, lists, and dictionaries in Vim.
+    Plug 'ervandew/supertab'                                        " use <tab> to completion
+    Plug 'Yggdroot/indentLine'                                      " indentline
+    Plug 'scrooloose/nerdcommenter'                                 " vim plugin for intensely orgasmic commenting
+    Plug 'blueyed/vim-diminactive'                                  " dim inactive windows
 
-" Colorscheme
-" Plug 'mcmartelle/vim-monokai-bold'
+    " Colorscheme
+    Plug 'joshdick/onedark.vim'                                     " Dark colorscheme
 
-" Python
-"" Python Bundle
-" Remember to install 'jedi' package in python3
-Plug 'davidhalter/jedi-vim'
-Plug 'raimon49/requirements.txt.vim', {'for': 'requirements'}
-Plug 'ervandew/supertab'                                        " use <tab> to completion
-Plug 'Yggdroot/indentLine'                                      " indentline
-Plug 'jmcantrell/vim-virtualenv'
+    " Syntax
+    " Plug 'sheerun/vim-polyglot'                                     " Syntax highlight for various languages
+    Plug 'kh3phr3n/python-syntax'                                   " Syntax highlight for python3
 
-" Markdown
-Plug 'godlygeek/tabular', { 'for': 'markdown' }
-Plug 'plasticboy/vim-markdown', { 'for': 'markdown' }
-" Avoid lower vim version
-if (v:version >= 800)
-    Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
-    Plug 'iamcco/mathjax-support-for-mkdp'                      " mathjax support for markdown-preview.vim plugin
-endif
+    " { Python } {{{
+        " Remember to install 'jedi' package in python3
+        Plug 'davidhalter/jedi-vim'
+        Plug 'raimon49/requirements.txt.vim', {'for': 'requirements'}
+        Plug 'jmcantrell/vim-virtualenv'
+    "}}}
 
-" csv layout
-Plug 'chrisbra/csv.vim'
+    " { Markdown } {{{
+        Plug 'godlygeek/tabular', { 'for': 'markdown' }
+        Plug 'plasticboy/vim-markdown', { 'for': 'markdown' }
+        " Avoid lower vim version
+        if (v:version >= 800)
+            Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
+            Plug 'iamcco/mathjax-support-for-mkdp'                      " mathjax support for markdown-preview.vim plugin
+        endif
+    " }}}
 
-"*****************************************************************************
-"*****************************************************************************
+    " csv layout
+    Plug 'chrisbra/csv.vim'
 
-"" Include user's extra bundle
-if filereadable(expand("~/.vimrc.local.bundles"))
-  source ~/.vimrc.local.bundles
-endif
+    " Include user's extra bundle
+    if filereadable(expand("~/.vimrc.local.bundles"))
+      source ~/.vimrc.local.bundles
+    endif
 
-call plug#end()
+    call plug#end()
+"}}}
 
-" Required:
-filetype plugin indent on
+" { Color } {{{
+    set background=dark
+    set synmaxcol=150
+    set t_Co=256               " 256 colors
+    " set term=xterm-256color
 
-"*****************************************************************************
-"" Visual Setting
-"*****************************************************************************
+    colorscheme onedark
+    let g:onedark_termcolors = 256
+    let g:onedark_terminal_italics = 1
 
-" color/colorscheme/syntax
-set background=dark
-set synmaxcol=150
-set t_Co=256               " 256 colors
-" set term=xterm-256color
-colorscheme monokai-bold
+    " let g:python_highlight_all = 1              " vim-python syntax highlight
 
-" conceal
-set conceallevel=1
-"nnoremap <Space>c :setlocal conceallevel=<c-r>=&conceallevel == 0 ? '2' : '0'<cr><cr>
+    hi Search cterm=reverse ctermbg=none ctermfg=none             " Search match
+    hi CursorLineNr cterm=bold ctermfg=Green ctermbg=none         " Cursor Line Number
+    " hi CursorLine cterm=none ctermbg=094 ctermfg=none           " Cursor Line
+    " hi String ctermfg=214
+    hi Visual cterm=bold ctermbg=240 guibg=Grey                   " Selected block
+    hi Folded ctermbg=233
 
-set ignorecase
-set smartcase         " search ignorecasely
-set wildignorecase    " ignore case when doing completion
-set hlsearch    " Highlight the search
-set incsearch   " incremental search
-hi Search cterm=reverse ctermbg=none ctermfg=none           " Search match
-hi CursorLineNr cterm=bold ctermfg=Green ctermbg=none       " Cursor Line Number
-hi CursorLine cterm=none ctermbg=094 ctermfg=none           " Cursor Line
-hi Comment ctermfg=087
-hi String ctermfg=214
-hi Visual cterm=bold ctermbg=Grey guibg=Grey40              " Selected block
+    " High light unwanted spaces in end of line
+    highlight ExtraWhitespace ctermbg=239 guibg=Grey
+    autocmd BufEnter * if &ft != 'help' | match ExtraWhitespace /\s\+$/ | endif
+    autocmd BufEnter * if &ft == 'help' | match none /\s\+$/ | endif
 
-" High light unwanted spaces in end of line
-highlight ExtraWhitespace ctermbg=darkred guibg=darkcyan
-autocmd BufEnter * if &ft != 'help' | match ExtraWhitespace /\s\+$/ | endif
-autocmd BufEnter * if &ft == 'help' | match none /\s\+$/ | endif
+    " toggle highlight search
+    nnoremap <Space>f :set hlsearch! hlsearch?<CR>
+" }}}
 
-"*****************************************************************************
-"" Mappings
-"*****************************************************************************
+" { Completion } {{{
+    " The tab trigger is done by SuperTab.
 
-" paste setting (toggles the 'paste' option)
-nnoremap <silent> <F2> :set invpaste paste?<CR>
-set pastetoggle=<F2>
+    " Use jedi-vim for python completion
+    autocmd FileType python setlocal omnifunc=jedi#completions " completeopt-=preview " disable docstring preview window popup
 
-" command mode mapping
-" Mapping Option binding keys for Mac Terminal
-execute "set <M-b>=b"
-execute "set <M-f>=f"
-cnoremap <M-b>    <S-Left>
-cnoremap <M-f>    <S-Right>
-" cnoremap <ESC>b   <S-Left>
-" cnoremap <ESC>f   <S-Right>
-cnoremap <C-a>    <Home>
+    " Supertab
+    let g:SuperTabDefaultCompletionType = "<c-n>"
+    " let g:SuperTabLongestEnhanced = 1
+    " let g:SuperTabCrMapping = 0
 
-" Insert completion
-inoremap <C-f> <C-x><C-f>
+    " Press <Enter> to select the completion
+    inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+
+    " Filename insert completion
+    inoremap <C-f> <C-x><C-f>
+" }}}
+
+" { Search } {{{
+    set hlsearch         " highlight search
+    set incsearch        " incremental search
+
+    set ignorecase       " ignore case during search
+    set smartcase        " ignore case if search pattern is all lowercase
+    set wildignorecase   " ignore case when doing completion
+
+    nnoremap ss *        " search the current selected word under cursor
+
+    " next/previous search
+    vnoremap 0 n
+    vnoremap 9 N
+    vnoremap n y/<C-r>"<CR>
+    vnoremap N y/<C-r>"<CR>NN
+    vnoremap C y/<C-r>"<CR>Ncgn
+
+    " grep search and show on quickfix
+    vnoremap <C-f> y:vimgrep <C-r>" %<CR> \| :copen <CR>
+    nnoremap <C-f> :vimgrep <C-r>/ %<CR> \| :copen <CR>
+
+    " search/substitute
+    vnoremap S :s///gc<Left><Left><Left><Left>
+" }}}
+
+" { Folding } {{{
+    " set nofoldenable                                           " default no folding
+    " set foldmethod=manual
+    set foldopen-=block
+
+    " fold methods for different filetypes
+    autocmd FileType tmux,zsh,snippets setlocal foldenable foldmethod=marker foldmarker={{{,#\ }}}
+    autocmd FileType vim setlocal foldenable foldmethod=marker
+    autocmd FileType json setlocal foldenable foldmethod=syntax
+    autocmd FileType python setlocal foldenable foldmethod=manual
+
+    " nnoremap zp vipzf                                          " fold the current paragraph
+    function! FoldOrSelect()
+        if foldlevel(line('.')) == 0
+            call feedkeys("vip")
+        else
+            call feedkeys("za")
+        endif
+    endfunction
+
+    " Press Enter to toggle folding except in quickfix
+    nnoremap <expr> <CR> &buftype ==# 'quickfix' ? "\<CR>" : ":call FoldOrSelect()<CR>"
+
+    " Press Enter to create folding
+    vnoremap <CR> zf
+" }}}
+
+" { Mappings }{{{
+    " paste setting (toggles the 'paste' option)
+    nnoremap <silent> <F2> :set invpaste paste?<CR>
+    set pastetoggle=<F2>
+
+    " { Meta Key for Mac } {{{
+        execute "set <M-b>=b"
+        execute "set <M-f>=f"
+    "}}}
+
+    " { Command mode mapping } {{{
+        cnoremap <M-b>    <S-Left>
+        cnoremap <M-f>    <S-Right>
+        cnoremap <C-a>    <Home>
+        cnoremap <C-e>    <End>
+    "}}}
+
+    " { Dragging line vertically } {{{
+        nnoremap <C-u> :m .-2<CR>
+        nnoremap <C-d> :m .+1<CR>
+        inoremap <C-u> <Esc>:m .-2<CR>gi
+        inoremap <C-d> <Esc>:m .+1<CR>gi
+        vnoremap <C-u> :m '<-2<CR>gv=gv
+        vnoremap <C-d> :m '>+1<CR>gv=gv
+    " }}}
+
+    " { Dragging line horizontally } {{{
+        nnoremap > >>
+        nnoremap < <<
+
+        " indent and re-select
+        vnoremap > >gv
+        vnoremap < <gv
+    " }}}
+
+" { Escape key mapping } {{{
+    " nnoremap q  <Esc>
+    nnoremap qq <Esc>
+    vnoremap q  <Esc>
+    inoremap qq <Esc>
+    inoremap <C-[> <Esc>
+" }}}
+
+    " { Auto-pair }{{{
+        let g:AutoPairsShortcutToggle = "<Space>p"
+        " inoremap [ []<ESC>i
+        " inoremap {<CR> {<CR>}<ESC>ko
+        " inoremap { {}<ESC>i
+        " inoremap ( ()<ESC>i
+
+        " inoremap " ""<ESC>i
+        " inoremap ' ''<ESC>i
+    "}}}
+
+    " { Page scrolling }{{{
+        nnoremap <C-k> <C-u>                " page up
+        nnoremap <C-j> <C-d>                " page down
+
+        " movement in too long lines
+        nnoremap j gj
+        nnoremap k gk
+    "}}}
 
 " toggle the 'virtualedit'
 nmap ve :let &virtualedit=&virtualedit=="" ? "all" : "" \| set virtualedit?<CR>
@@ -195,252 +350,215 @@ nmap ve :let &virtualedit=&virtualedit=="" ? "all" : "" \| set virtualedit?<CR>
 nnoremap <Space>s :vsp \| b<Space>
 
 " Switch Buffer in Normal mode
-" nnoremap <C-J> :bn<CR>
-" nnoremap <C-K> :bp<CR>
-nnoremap bj :bn<CR>
-nnoremap bk :bp<CR>
-nnoremap <Space><Tab> :b#<CR>                              " switch to previous edited buffer
-nnoremap bd :bdelete
-
-" Search
-nnoremap ss *                                              " search the current selected word under cursor
-" next/previous search
-vnoremap n y/<C-r>"<CR>
-vnoremap N y/<C-r>"<CR>NN
-vnoremap C y/<C-r>"<CR>Ncgn
-
-" grep search and show on quickfix
-vnoremap <C-f> y:vimgrep <C-r>" %<CR> \| :copen <CR>
-nnoremap <C-f> :vimgrep <C-r>/ %<CR> \| :copen <CR>
-
-" { Escape key mapping } {{{
-" nnoremap q  <Esc>
-nnoremap qq <Esc>
-vnoremap q  <Esc>
-inoremap qq <Esc>
-" }}}
-
-" Folding
-" set foldmethod=indent
-set nofoldenable                                           " default no folding
-set foldmethod=manual
-" nnoremap <space> za
-" nnoremap zp vipzf                                          " fold the current paragraph
-function! FoldOrSelect()
-    if foldlevel(line('.')) == 0
-        call feedkeys("vip")
-    else
-        call feedkeys("za")
-    endif
-endfunction
-
-" Press Enter to toggle folding except in quickfix
-nnoremap <expr> <CR> &buftype ==# 'quickfix' ? "\<CR>" : ":call FoldOrSelect()<CR>"
-vnoremap <CR> zf
-
-" vim-argwrap
-nnoremap <silent> <Space>a :ArgWrap<CR>
-
-" vim-markdown
-let g:vim_markdown_no_default_key_mappings = 1
+nnoremap <Leader>bj :bn<CR>
+nnoremap <Leader>bk :bp<CR>
+nnoremap <Leader>bd :bdelete
 
 " NERDTree
 nnoremap <silent> <F5> :NERDTree<CR>
 
-" brackets completion
-inoremap [ []<ESC>i
-inoremap {<CR> {<CR>}<ESC>ko
-inoremap { {}<ESC>i
-inoremap ( ()<ESC>i
-
-" quotes completion
-inoremap " ""<ESC>i
-inoremap ' ''<ESC>i
-
 " list history of command
 noremap ;; q:
 
-" Show all buffers
-:nnoremap <Leader>b :buffers<CR>:buffer<Space>
+"}}}
 
-"*****************************************************************************
-"" Plug setting
-"*****************************************************************************
-" Hotkey of opening NERDTree
+" { Plugin Config } {{{
+    " { vim-airline } {{{
+        set laststatus=2                                           " set status line
+        let g:airline_theme = 'ayu_dark'
+        let g:airline_powerline_fonts = 1                          " enable powerline-fonts
+        let g:airline_skip_empty_sections = 1
+        let g:airline#extensions#bufferline#enabled = 1
+        " let g:airline#extensions#tagbar#enabled = 1
+        let g:airline#extensions#branch#enabled = 1                " Show current git branch
+        let g:airline#extensions#ale#enabled = 1                   " ALE syntax
+        let g:airline#extensions#tabline#enabled = 1
+        let g:airline#extensions#tabline#fnamemod = ':t'           " Show file name only
+        let g:airline#extensions#tabline#show_tab_nr = 1
+        let g:airline#extensions#tabline#tab_nr_type = 1
+        let g:airline#extensions#tabline#buffer_nr_show=1          " Show the index of buffer
+        let g:airline#extensions#tabline#buffer_idx_mode = 0
 
-" vim-airline
-set laststatus=2                                           " set status line
-let g:airline_theme = 'powerlineish'
-let g:airline#extensions#branch#enabled = 1                " Show current git branch
-let g:airline#extensions#ale#enabled = 1                   " ALE syntax
-let g:airline_powerline_fonts = 1                          " enable powerline-fonts
-let g:airline#extensions#tabline#enabled = 1
-let g:airline#extensions#tabline#fnamemod = ':t'           " Show file name only
-let g:airline#extensions#tabline#show_tab_nr = 1
-let g:airline#extensions#tabline#tab_nr_type = 1
-let g:airline#extensions#tabline#buffer_nr_show=1          " Show the index of buffer
-let g:airline#extensions#tabline#buffer_idx_mode = 0
+        nmap <leader>1 <Plug>AirlineSelectTab1
+        nmap <leader>2 <Plug>AirlineSelectTab2
+        nmap <leader>3 <Plug>AirlineSelectTab3
+        nmap <leader>4 <Plug>AirlineSelectTab4
+        nmap <leader>5 <Plug>AirlineSelectTab5
+        nmap <leader>6 <Plug>AirlineSelectTab6
+        nmap <leader>7 <Plug>AirlineSelectTab7
+        nmap <leader>8 <Plug>AirlineSelectTab8
+        nmap <leader>9 <Plug>AirlineSelectTab9
 
-nmap <leader>1 <Plug>AirlineSelectTab1
-nmap <leader>2 <Plug>AirlineSelectTab2
-nmap <leader>3 <Plug>AirlineSelectTab3
-nmap <leader>4 <Plug>AirlineSelectTab4
-nmap <leader>5 <Plug>AirlineSelectTab5
-nmap <leader>6 <Plug>AirlineSelectTab6
-nmap <leader>7 <Plug>AirlineSelectTab7
-nmap <leader>8 <Plug>AirlineSelectTab8
-nmap <leader>9 <Plug>AirlineSelectTab9
+        let g:airline_symbols = get(g:, 'airline_symbols', {})
+        let g:airline_symbols.space = "\ua0"
 
-" let g:airline#extensions#bufferline#enabled = 1
-" let g:airline#extensions#tagbar#enabled = 1
-let g:airline_skip_empty_sections = 1
+        " { powerline_fonts } {{{
+            if !exists('g:airline_powerline_fonts')
+                " unicode symbols
+                let g:airline_left_sep = '»'
+                let g:airline_left_sep = '▶'
+                let g:airline_right_sep = '«'
+                let g:airline_right_sep = '◀'
+                let g:airline_symbols.crypt = '🔒'
+                let g:airline_symbols.linenr = '☰ '
+                let g:airline_symbols.maxlinenr = '㏑'
+                let g:airline_symbols.branch = '⎇'
+                let g:airline_symbols.spell = 'Ꞩ'
+                let g:airline_symbols.notexists = 'Ɇ'
+                let g:airline_symbols.whitespace = 'Ξ'
+            else
+                " powerline symbols
+                let g:airline_left_sep = ''
+                let g:airline_left_alt_sep = ''
+                let g:airline_right_sep = ''
+                let g:airline_right_alt_sep = ''
+                let g:airline_symbols.branch = ''
+                let g:airline_symbols.readonly = ''
+                let g:airline_symbols.linenr = '☰ '
+                let g:airline_symbols.colnr = ':'
+                let g:airline_symbols.maxlinenr = ''
+                let g:airline_symbols.dirty='⚡'
+                let g:airline_symbols.delimiters = ' '
+            endif
+        " }}}
+    " }}}
 
-let g:airline_symbols = get(g:, 'airline_symbols', {})
-let g:airline_symbols.space = "\ua0"
+    " { indentLine } {{{
+        let g:indentLine_enabled = 0
+        "let g:indentLine_setColors = 0
+        let g:indentLine_color_term = 50
+        let g:indentLine_char_list = ['|', '¦', '┆', '┊']
+    "}}}
 
-if !exists('g:airline_powerline_fonts')
-" unicode symbols
-  let g:airline_left_sep = '»'
-  let g:airline_left_sep = '▶'
-  let g:airline_right_sep = '«'
-  let g:airline_right_sep = '◀'
-  let g:airline_symbols.crypt = '🔒'
-  let g:airline_symbols.linenr = '☰ '
-  " let g:airline_symbols.linenr = '␊'
-  " let g:airline_symbols.linenr = '␤'
-  " let g:airline_symbols.linenr = '¶'
-  " let g:airline_symbols.maxlinenr = ''
-  let g:airline_symbols.maxlinenr = '㏑'
-  let g:airline_symbols.branch = '⎇'
-  " let g:airline_symbols.paste = 'PASTE'
-  " let g:airline_symbols.paste = 'ρ'
-  " let g:airline_symbols.paste = 'Þ'
-  " let g:airline_symbols.paste = '∥'
-  let g:airline_symbols.spell = 'Ꞩ'
-  let g:airline_symbols.notexists = 'Ɇ'
-  let g:airline_symbols.whitespace = 'Ξ'
-else
-" powerline symbols
-  let g:airline_left_sep = ''
-  let g:airline_left_alt_sep = ''
-  let g:airline_right_sep = ''
-  let g:airline_right_alt_sep = ''
-  let g:airline_symbols.branch = ''
-  let g:airline_symbols.readonly = ''
-  let g:airline_symbols.linenr = '☰ '
-  let g:airline_symbols.maxlinenr = ''
-  let g:airline_symbols.dirty='⚡'
-endif
+    " { Limelight } {{{
+        let g:limelight_conceal_ctermfg = 'gray'
+        let g:limelight_conceal_ctermfg = 240
+        let g:limelight_paragraph_span  = 1
+    "}}}
 
-" indentLine
-let g:indentLine_enabled = 0
-"let g:indentLine_setColors = 0
-let g:indentLine_color_term = 50
-let g:indentLine_char_list = ['|', '¦', '┆', '┊']
+    " { NERDTree } {{{
+        autocmd StdinReadPre * let s:std_in=1
+        autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
+    "}}}
 
-" Limelight
-let g:limelight_conceal_ctermfg = 'gray'
-let g:limelight_conceal_ctermfg = 240
-let g:limelight_paragraph_span  = 1
+    " { NERDCommenter } {{{
+        let g:NERDSpaceDelims            = 1 " Add spaces after comment delimiters by default
+        let g:NERDCommentEmptyLines      = 0
+        let g:NERDCompactSexyComs        = 1 " Use compact syntax for prettified multi-line comments
+        let g:NERDTrimTrailingWhitespace = 1 " Enable trimming of trailing whitespace when uncommenting
+        let g:NERDDefaultAlign           = 'left' " Align line-wise comment delimiters flush left instead of following code indentation
+        let g:NERDCustomDelimiters       = {'c':{'left':'//'}, 'python':{'left':'#'}, 'bash':{'left':'#'}}
+    "}}}
 
-" NERDTree
-autocmd StdinReadPre * let s:std_in=1
-autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
+    " { vim-argwrap } {{{
+        nnoremap <silent> <Space>a :ArgWrap<CR>
+        " let g:argwrap_tail_comma = 1              " preceded with a comma at last arg when wrapping lines.
+    "}}}
 
+    " vim-surround {{{
+        let g:surround_no_mappings = 1
+        nmap cs <Plug>Csurround
+        nmap ds <Plug>Dsurround
+        vmap s <Plug>VSurround
+        vmap gs <Plug>VgSurround
+    "}}}
 
-" NERDCommenter
-let g:NERDSpaceDelims            = 1 " Add spaces after comment delimiters by default
-let g:NERDCommentEmptyLines      = 0
-let g:NERDCompactSexyComs        = 1 " Use compact syntax for prettified multi-line comments
-let g:NERDTrimTrailingWhitespace = 1 " Enable trimming of trailing whitespace when uncommenting
-let g:NERDDefaultAlign           = 'left' " Align line-wise comment delimiters flush left instead of following code indentation
-let g:NERDCustomDelimiters       = {'c':{'left':'//'}, 'python':{'left':'#'}, 'bash':{'left':'#'}}
+    " { vim-diminactive } {{{
+        " let g:diminactive_use_syntax = 1   " disable syntax highlight in inactive pane
+        hi ColorColumn ctermbg=236 guibg=#eee8d5
+    "}}}
 
-" vim-markdown
-let g:vim_markdown_toc_autofit      = 1
-let g:vim_markdown_folding_disabled = 1
+    " { vim-markdown } {{{
+        let g:vim_markdown_toc_autofit      = 1
+        let g:vim_markdown_folding_disabled = 1
+        let g:vim_markdown_no_default_key_mappings = 1
+    "}}}
 
-" vim-csv
-let g:csv_no_progress = 1
-let g:csv_strict_columns = 1
-let g:csv_start = 1
-let g:csv_end = 100
-let g:csv_nomap_up=1
-let g:csv_nomap_down=1
+    " { vim-csv } {{{
+        let g:csv_no_progress = 1
+        let g:csv_strict_columns = 1
+        let g:csv_start = 1
+        let g:csv_end = 100
+        let g:csv_nomap_up=1
+        let g:csv_nomap_down=1
+    "}}}
 
-" virtualenv
-let g:virtualenv_auto_activate = 1
-let g:virtualenv_directory     = $VIRTUAL_ENV
+    " { virtualenv } {{{
+        let g:virtualenv_auto_activate = 1
+        let g:virtualenv_directory     = $VIRTUAL_ENV
+    "}}}
 
-" jedi-vim
-let g:jedi#force_py_version = 3
-let g:jedi#popup_on_dot = 0
-let g:jedi#goto_assignments_command = "<leader>g"
-let g:jedi#goto_definitions_command = "<leader>d"
-let g:jedi#documentation_command = "K"
-let g:jedi#usages_command = "<leader>n"
-let g:jedi#rename_command = "<leader>r"
-let g:jedi#show_call_signatures = "2"
-" let g:jedi#use_tabs_not_buffers = 0
-let g:jedi#use_splits_not_buffers = "right"
-let g:jedi#completions_command = "<C-N>"
-let g:jedi#smart_auto_mappings = 0
+    " { jedi-vim } {{{
+        let g:jedi#force_py_version = 3
+        let g:jedi#popup_on_dot = 0
+        let g:jedi#goto_assignments_command = "<leader>g"
+        let g:jedi#goto_definitions_command = "<leader>d"
+        let g:jedi#documentation_command = "K"
+        let g:jedi#usages_command = "<leader>n"
+        let g:jedi#rename_command = "<leader>r"
+        let g:jedi#show_call_signatures = "2"
+        " let g:jedi#use_tabs_not_buffers = 0
+        let g:jedi#use_splits_not_buffers = "right"
+        let g:jedi#completions_command = "<C-N>"
+        let g:jedi#smart_auto_mappings = 0
+    "}}}
 
-autocmd FileType python set omnifunc=jedi#completions
-autocmd FileType python setlocal completeopt-=preview " disable docstring preview window popup
+    " { ale } {{{
+        let g:ale_fixers = {
+        \    'python': ['autopep8']
+        \}
+        let g:ale_python_autopep8_options = '-v -a -a -a --max-line-length=79'
+        let g:ale_linters = {
+        \   'python': ['flake8', 'pylint', 'mypy'],
+        \   'zsh': ['shell'],
+        \}
+    "}}}
 
-" Supertab
-let g:SuperTabDefaultCompletionType = "context"
-" let g:SuperTabLongestEnhanced = 1
-" let g:SuperTabCrMapping = 0
+    " { Markdown preview } {{{
+        let g:mkdp_auto_start = 0 				  " do NOT automatically open the preview window
+        let g:mkdp_auto_close = 1 				  " auto close current preview window when change to another buffer
+        let g:mkdp_refresh_slow = 0  			  " auto refresh markdown as you edit or move the cursor
+        let g:mkdp_command_for_global = 0         " MarkdownPreview command can be use for only markdown file
+        let g:mkdp_open_to_the_world = 1   		  " preview server available to others in your network
+        let g:mkdp_open_ip = system("curl ifconfig.me")  " custom the server ip
+        let g:mkdp_port = '8017'                  " use a custom port to start server
+        let g:mkdp_browser = ''                   " no browser specified
+        let g:mkdp_echo_preview_url = 1           " echo preview page url in command line when open preview page
+        let g:mkdp_browserfunc = ''               " custom vim function name to open preview page
+        let g:mkdp_page_title = '「${name}」'     " preview page title, default with filename
+        let g:mkdp_preview_options = {
+            \ 'mkit': {},
+            \ 'katex': {},
+            \ 'uml': {},
+            \ 'maid': {},
+            \ 'disable_sync_scroll': 0,
+            \ 'sync_scroll_type': 'middle',
+            \ 'hide_yaml_meta': 1,
+            \ 'sequence_diagrams': {},
+            \ 'flowchart_diagrams': {}
+            \ }
+    "}}}
 
-" Markdown preview
-let g:mkdp_auto_start = 0 				  " do NOT automatically open the preview window
-let g:mkdp_auto_close = 1 				  " auto close current preview window when change to another buffer
-let g:mkdp_refresh_slow = 0  			  " auto refresh markdown as you edit or move the cursor
-let g:mkdp_command_for_global = 0         " MarkdownPreview command can be use for only markdown file
-let g:mkdp_open_to_the_world = 1   		  " preview server available to others in your network
-let g:mkdp_open_ip = system("curl ifconfig.me")  " custom the server ip
-let g:mkdp_port = '8017'                  " use a custom port to start server
-let g:mkdp_browser = ''                   " no browser specified
-let g:mkdp_echo_preview_url = 1           " echo preview page url in command line when open preview page
-let g:mkdp_browserfunc = ''               " custom vim function name to open preview page
-let g:mkdp_page_title = '「${name}」'     " preview page title, default with filename
-let g:mkdp_preview_options = {
-    \ 'mkit': {},
-    \ 'katex': {},
-    \ 'uml': {},
-    \ 'maid': {},
-    \ 'disable_sync_scroll': 0,
-    \ 'sync_scroll_type': 'middle',
-    \ 'hide_yaml_meta': 1,
-    \ 'sequence_diagrams': {},
-    \ 'flowchart_diagrams': {}
-    \ }
+    " { python-syntax } {{{
+        let python_highlight_all = 1
+        " let python_self_cls_highlight = 1
+        " let python_no_operator_highlight = 1
+        " let python_no_parameter_highlight = 0
+    "}}}
+
+"}}}
 
 "*****************************************************************************
 """ Custom configs
 "*****************************************************************************
-" python
-" ale
-" let g:ale_lint_on_text_changed = 0
-" let g:ale_lint_on_enter = 0
-" let g:ale_lint_on_save = 1
-let g:ale_fixers = {
-\    'python': ['autopep8']
-\}
-let g:ale_python_autopep8_options = '-v -a -a -a --max-line-length=79'
-let g:ale_linters = {
-\   'python': ['flake8', 'pylint', 'mypy'],
-\   'zsh': ['shell'],
-\}
+
+filetype plugin indent on
 
 " vim-python
 augroup vimrc-python
   autocmd!
   autocmd FileType python setlocal expandtab shiftwidth=4 tabstop=8 colorcolumn=79
       \ formatoptions+=croq softtabstop=4
-      \ cinwords=if,elif,else,for,while,try,except,finally,def,class,with
   autocmd FileType python let g:SuperTabDefaultCompletionType = "<c-x><c-o>"
   " Multi-lines comment
   autocmd FileType python syntax region comment start=/"""/ end=/"""/
@@ -449,8 +567,7 @@ augroup END
 
 
 " YAML
-" au! BufNewFile,BufReadPost *.{yaml,yml} set filetype=yaml foldmethod=indent
-autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
+autocmd FileType yaml,json,json5 setlocal tabstop=2 softtabstop=2 shiftwidth=4
 
 " vim-airline
 let g:airline#extensions#virtualenv#enabled = 1
