@@ -2,6 +2,7 @@
 alias rm="rm -i"
 alias ll="ls -alhF"
 alias la="ls -A"
+# alias nvim="~/.local/bin/nvim"
 
 # Environment Module
 # set ModuleFish "/usr/share/modules/init/fish"

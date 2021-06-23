@@ -12,7 +12,7 @@
     set number relativenumber              " show line number
     set showmatch                          " match parentheses
     set diffopt+=iwhite                    " ignore white space in vimdiff
-    set timeout timeoutlen=600             " set timeout to use double key in imap confortablely
+    set timeout timeoutlen=400             " set timeout to use double key in imap confortablely
     set mouse=a                            " enable mouse
     set encoding=utf-8
     set hidden                             " hidden unsaved buffers instead of closing them
@@ -285,7 +285,58 @@
     nnoremap <silent> <F2> :set invpaste paste?<CR>
     set pastetoggle=<F2>
 
-    " { Meta Key for Mac } {{{
+    inoremap aa <C-o>a
+
+    " { Disable arrow keys } {{{
+
+        " normal mode
+        nnoremap <Down> <Nop>
+        nnoremap <Left> <Nop>
+        nnoremap <Right> <Nop>
+        nnoremap <Up> <Nop>
+
+        " insert mode
+        " disable the affect of `^[OA` when pressing <up> in insert mode
+        " imap <ESC>oA <ESC>ki
+        " imap <ESC>oB <ESC>ji
+        " imap <ESC>oC <ESC>li
+        " imap <ESC>oD <ESC>hi
+        inoremap <Down> <Nop>
+        inoremap <Left> <Nop>
+        inoremap <Right> <Nop>
+        inoremap <Up> <Nop>
+
+    "}}}
+
+    " { Redo / Undo } {{{
+        nnoremap U <C-r>
+        inoremap uu <Esc>u
+    "}}}
+
+    " { Movement with in line } {{{
+        " begining & end
+        nnoremap B ^
+        nnoremap E $
+        vnoremap B ^
+        vnoremap E $h
+
+        " emacs-like
+        inoremap <M-f> <C-o>w
+        inoremap <M-b> <C-o>b
+        inoremap <C-a> <C-o>I
+        inoremap <C-e> <C-o>A
+        " cnoremap <C-f> <Right>
+        " cnoremap <C-o> <C-f>
+        " cnoremap <C-b> <Left>
+    " }}}
+
+    " { Last changed } {{{
+        nnoremap g; g;zz
+        nnoremap g, g,zz
+        nnoremap <C-o> <C-o>zz
+    "}}}
+
+    " { Meta Key for MacOS } {{{
         execute "set <M-b>=b"
         execute "set <M-f>=f"
     "}}}
@@ -316,14 +367,16 @@
     " }}}
 
 " { Escape key mapping } {{{
-    " nnoremap q  <Esc>
+    nnoremap q  <Esc>
     nnoremap qq <Esc>
     vnoremap q  <Esc>
     inoremap qq <Esc>
-    inoremap <C-[> <Esc>
+    inoremap qw <Esc>:w<CR>
+    " inoremap <C-[> <Esc>
 " }}}
 
     " { Auto-pair }{{{
+        let g:AutoPairsShortcutBackInsert = ''
         let g:AutoPairsShortcutToggle = "<Space>p"
         " inoremap [ []<ESC>i
         " inoremap {<CR> {<CR>}<ESC>ko
@@ -339,8 +392,10 @@
         nnoremap <C-j> <C-d>                " page down
 
         " movement in too long lines
-        nnoremap j gj
-        nnoremap k gk
+        " nnoremap j gj
+        " nnoremap k gk
+        nnoremap <expr> k v:count == 0 ? 'gk' : 'k'
+        nnoremap <expr> j v:count == 0 ? 'gj' : 'j'
     "}}}
 
 " toggle the 'virtualedit'
@@ -455,7 +510,7 @@ noremap ;; q:
         " let g:argwrap_tail_comma = 1              " preceded with a comma at last arg when wrapping lines.
     "}}}
 
-    " vim-surround {{{
+    " { vim-surround } {{{
         let g:surround_no_mappings = 1
         nmap cs <Plug>Csurround
         nmap ds <Plug>Dsurround
@@ -509,7 +564,7 @@ noremap ;; q:
         \}
         let g:ale_python_autopep8_options = '-v -a -a -a --max-line-length=79'
         let g:ale_linters = {
-        \   'python': ['flake8', 'pylint', 'mypy'],
+        \   'python': ['flake8', 'mypy'],
         \   'zsh': ['shell'],
         \}
     "}}}
