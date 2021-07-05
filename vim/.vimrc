@@ -388,7 +388,7 @@
 
     " { Auto-pair }{{{
         let g:AutoPairsShortcutBackInsert = ''
-        let g:AutoPairsShortcutToggle = "<Space>p"
+        let g:AutoPairsShortcutToggle = "<leader>p"
         " inoremap [ []<ESC>i
         " inoremap {<CR> {<CR>}<ESC>ko
         " inoremap { {}<ESC>i

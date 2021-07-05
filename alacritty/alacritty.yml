@@ -111,7 +111,7 @@ font:
     #   - (macOS) Menlo
     #   - (Linux/BSD) monospace
     #   - (Windows) Consolas
-    family: Droid Sans Mono Dotted for Powerline
+    family: DroidSansMono Nerd Font
 
     # The `style` can be specified to pick a specific face.
     #style: Regular
@@ -367,9 +367,9 @@ background_opacity: 0.85
   # When set to `true`, selected text will be copied to the primary clipboard.
   #save_to_clipboard: false
 
-#cursor:
+cursor:
   # Cursor style
-  #style:
+  style: Block
     # Cursor shape
     #
     # Values for `shape`:
@@ -400,7 +400,7 @@ background_opacity: 0.85
 
   # If this is `true`, the cursor will be rendered as a hollow box when the
   # window is not focused.
-  #unfocused_hollow: true
+  unfocused_hollow: true
 
   # Thickness of the cursor relative to the cell width as floating point number
   # from `0.0` to `1.0`.
@@ -747,6 +747,16 @@ key_bindings:
   - { key: X,         mods: Alt,       chars: "\x1bx"                       }
   - { key: Y,         mods: Alt,       chars: "\x1by"                       }
   - { key: Z,         mods: Alt,       chars: "\x1bz"                       }
+  - { key: Key0,      mods: Alt,       chars: "\x1b0"                       }
+  - { key: Key1,      mods: Alt,       chars: "\x1b1"                       }
+  - { key: Key2,      mods: Alt,       chars: "\x1b2"                       }
+  - { key: Key3,      mods: Alt,       chars: "\x1b3"                       }
+  - { key: Key4,      mods: Alt,       chars: "\x1b4"                       }
+  - { key: Key5,      mods: Alt,       chars: "\x1b5"                       }
+  - { key: Key6,      mods: Alt,       chars: "\x1b6"                       }
+  - { key: Key7,      mods: Alt,       chars: "\x1b7"                       }
+  - { key: Key8,      mods: Alt,       chars: "\x1b8"                       }
+  - { key: Key9,      mods: Alt,       chars: "\x1b9"                       }
 
   #- { key: Paste,                                       action: Paste          }
   #- { key: Copy,                                        action: Copy           }
@@ -853,7 +863,7 @@ key_bindings:
   #- { key: M,              mods: Command,                    action: Minimize              }
   #- { key: Q,              mods: Command,                    action: Quit                  }
   #- { key: W,              mods: Command,                    action: Quit                  }
-  #- { key: N,              mods: Command,                    action: SpawnNewInstance      }
+  - { key: N,              mods: Command,                    action: SpawnNewInstance      }
   #- { key: F,              mods: Command|Control,            action: ToggleFullscreen      }
   #- { key: F,              mods: Command, mode: ~Search,     action: SearchForward         }
   #- { key: B,              mods: Command, mode: ~Search,     action: SearchBackward        }

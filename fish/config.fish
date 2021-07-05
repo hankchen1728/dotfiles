@@ -3,6 +3,8 @@ alias rm="rm -i"
 alias ll="ls -alhF"
 alias la="ls -A"
 
+# Add rust carge path
+set -U fish_user_paths $HOME/.carge/bin $fish_user_paths
 # Add the path of self installed binary
 set -U fish_user_paths $HOME/.local/bin $fish_user_paths
 

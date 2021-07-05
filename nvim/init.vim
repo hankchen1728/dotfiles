@@ -12,18 +12,19 @@
     set number relativenumber              " show line number
     set showmatch                          " match parentheses
     set diffopt+=iwhite                    " ignore white space in vimdiff
-    set timeout timeoutlen=600             " set timeout to use double key in imap confortablely
+    set timeout timeoutlen=400             " set timeout to use double key in imap confortablely
+    " set updatetime=300
     set mouse=a                            " enable mouse
     set encoding=utf-8
     set hidden                             " hidden unsaved buffers instead of closing them
     set previewheight=5                    " hight of completion preview
+    set pumheight=10                       " height of pop-up menu
     set wrap                               " line wrap
     set backspace=indent,eol,start
-    set virtualedit=
+    set virtualedit=block
     set re=1
     set conceallevel=2                     " concealment
-    " nnoremap <Space>c :setlocal conceallevel=<c-r>=&conceallevel == 0 ? '2' : '0'<cr><cr>
-    " set virtualedit=all        " allows spacing the cursor to any column
+    set signcolumn=yes
     " set ambiwidth=double       " Double char width
 
     " { Clipboard }{{{
@@ -70,6 +71,12 @@
         " set cindent
     " }}}
 
+    " { Completion } {{{
+        " for nvim-compe setting
+        set completeopt-=preview
+        set completeopt=menuone,noselect
+    "}}}
+
     " spell check
     setlocal spell spelllang=en_us
     set spell!
@@ -105,73 +112,8 @@
 
 " }}}
 
-" { Vim-Plug } {{{
-    " { install vim-plug } {{{
-        let vimplug_exists=expand('~/.local/share/nvim/runtime/autoload/plug.vim')
-
-        let g:vim_bootstrap_langs = "c,html,javascript,python,ruby"
-        let g:vim_bootstrap_editor = "nvim"				" nvim or vim
-
-        if !filereadable(vimplug_exists)
-          if !executable("curl")
-            echoerr "You have to install curl or first install vim-plug yourself!"
-            execute "q!"
-          endif
-          echo "Installing Vim-Plug..."
-          echo ""
-          silent exec "!\curl -fLo " . vimplug_exists . " --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"
-          let g:not_finish_vimplug = "yes"
-
-          autocmd VimEnter * PlugInstall
-        endif
-    "}}}
-
-    call plug#begin('~/.local/share/nvim/plugged')
-    " General
-    Plug 'vim-airline/vim-airline'
-    Plug 'vim-airline/vim-airline-themes'
-    Plug 'jiangmiao/auto-pairs'                                     " auto pair brackets, parens, quotes
-    Plug 'tpope/vim-surround'                                       " auto surround brackets, parens, quotes
-
-    Plug 'neovim/nvim-lspconfig'                                    " A collection of common configurations for Neovim's built-in language server client
-    Plug 'nvim-compe'                                               " Auto completionlugin for nvim
-
-    Plug 'majutsushi/tagbar'
-    Plug 'tpope/vim-fugitive'                                       " git helper for vim
-    Plug 'junegunn/limelight.vim'                                   " hyperfocus-writing in Vim
-    Plug 'w0rp/ale'                                                 " linter
-    Plug 'google/vim-searchindex'                                   " Search index helper
-    Plug 'kalekundert/vim-coiled-snake'                             " folding tool
-    Plug 'Konfekt/FastFold'
-    Plug 'FooSoft/vim-argwrap'                                      " Wrap and unwrap function arguments, lists, and dictionaries in Vim.
-    Plug 'ervandew/supertab'                                        " use <tab> to completion
-    Plug 'Yggdroot/indentLine'                                      " indentline
-    Plug 'scrooloose/nerdcommenter'                                 " vim plugin for intensely orgasmic commenting
-    Plug 'blueyed/vim-diminactive'                                  " dim inactive windows
-
-    " Colorscheme
-    Plug 'joshdick/onedark.vim'                                     " Dark colorscheme
-
-    " Syntax
-    " Plug 'sheerun/vim-polyglot'                                     " Syntax highlight for various languages
-    Plug 'kh3phr3n/python-syntax'                                   " Syntax highlight for python3
-
-    " { Python } {{{
-        Plug 'raimon49/requirements.txt.vim', {'for': 'requirements'}
-    "}}}
-
-    " { Markdown } {{{
-        Plug 'godlygeek/tabular', { 'for': 'markdown' }
-        Plug 'plasticboy/vim-markdown', { 'for': 'markdown' }
-        " Avoid lower vim version
-        Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
-        Plug 'iamcco/mathjax-support-for-mkdp'                      " mathjax support for markdown-preview.vim plugin
-    " }}}
-
-    " csv layout
-    Plug 'chrisbra/csv.vim'
-
-    call plug#end()
+" { Plugins } {{{
+    lua require'Plugins'
 "}}}
 
 " { Color } {{{
@@ -181,6 +123,7 @@
     " set term=xterm-256color
 
     colorscheme onedark
+    hi Normal guibg=NONE ctermbg=NONE
     let g:onedark_termcolors = 256
     let g:onedark_terminal_italics = 1
 
@@ -203,17 +146,7 @@
 " }}}
 
 " { Completion } {{{
-    " The tab trigger is done by SuperTab.
 
-    " Use jedi-vim for python completion
-    autocmd FileType python setlocal omnifunc=jedi#completions " completeopt-=preview " disable docstring preview window popup
-
-    " Supertab
-    let g:SuperTabDefaultCompletionType = "<c-n>"
-    " let g:SuperTabLongestEnhanced = 1
-    " let g:SuperTabCrMapping = 0
-
-    " Press <Enter> to select the completion
     inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 
     " Filename insert completion
@@ -246,17 +179,46 @@
 " }}}
 
 " { Folding } {{{
-    " set nofoldenable                                           " default no folding
-    " set foldmethod=manual
-    set foldopen-=block
+    set foldenable                                           " default folding
+
+    " default foldmethod
+    setlocal foldmethod=expr
+
+    " use treesitter as folding method
+    set foldexpr=nvim_treesitter#foldexpr()
+
+    " folding display text
+    set fillchars=fold:\               " use trailing space as the padding of folding
+    set foldtext=MyFoldText()
+    function! MyFoldText()
+        let head = getline(v:foldstart)
+        let head = substitute(head, '{{{', '', 'g')
+        let head = substitute(head, '\s\+$', '', 'g')
+        let tail = substitute(trim(getline(v:foldend)), '.*}}}', '', 'g')
+        return head . ' ... ' . tail
+    endfunction
+
+    " Open the folding automatically in conditions of
+    "   all             any
+    "   block           (, {, [[, [{, etc.
+    "   hor             horizontal movements
+    "   insert          any command in Insert mode
+    "   jump            far jumps
+    "   mark            mark jumps
+    "   percent         pair match
+    "   quickfix        :cn, :crew, :make, etc.
+    "   search          search for a pattern: /, n, *, gd, etc.
+    "                   (not for a search pattern in a : command) Also for [s and ]s.
+    "   tag             jumping to a tag: :ta, CTRL-T, etc.
+    "   undo            undo or redo: u and CTRL-R
+    set foldopen=hor,mark,percent,quickfix,search,tag,undo
 
     " fold methods for different filetypes
     autocmd FileType tmux,zsh,snippets setlocal foldenable foldmethod=marker foldmarker={{{,#\ }}}
     autocmd FileType vim setlocal foldenable foldmethod=marker
-    autocmd FileType json setlocal foldenable foldmethod=syntax
-    autocmd FileType python setlocal foldenable foldmethod=manual
+    autocmd FileType json,json5 setlocal foldenable foldmethod=syntax
+    " autocmd FileType python setlocal foldenable foldmethod=manual
 
-    " nnoremap zp vipzf                                          " fold the current paragraph
     function! FoldOrSelect()
         if foldlevel(line('.')) == 0
             call feedkeys("vip")
@@ -276,6 +238,57 @@
     " paste setting (toggles the 'paste' option)
     nnoremap <silent> <F2> :set invpaste paste?<CR>
     set pastetoggle=<F2>
+
+    inoremap aa <C-o>a
+
+    " { Disable arrow keys } {{{
+
+        " normal mode
+        nnoremap <Down> <Nop>
+        nnoremap <Left> <Nop>
+        nnoremap <Right> <Nop>
+        nnoremap <Up> <Nop>
+
+        " insert mode
+        " disable the affect of `^[OA` when pressing <up> in insert mode
+        " imap <ESC>oA <ESC>ki
+        " imap <ESC>oB <ESC>ji
+        " imap <ESC>oC <ESC>li
+        " imap <ESC>oD <ESC>hi
+        inoremap <Down> <Nop>
+        inoremap <Left> <Nop>
+        inoremap <Right> <Nop>
+        inoremap <Up> <Nop>
+
+    "}}}
+
+    " { Redo / Undo } {{{
+        nnoremap U <C-r>
+        inoremap uu <Esc>u
+    "}}}
+
+    " { Movement with in line } {{{
+        " begining & end
+        nnoremap B ^
+        nnoremap E $
+        vnoremap B ^
+        vnoremap E $h
+
+        " emacs-like
+        inoremap <M-f> <C-o>w
+        inoremap <M-b> <C-o>b
+        inoremap <C-a> <C-o>I
+        inoremap <C-e> <C-o>A
+        " cnoremap <C-f> <Right>
+        " cnoremap <C-o> <C-f>
+        " cnoremap <C-b> <Left>
+    " }}}
+
+    " { Last changed } {{{
+        nnoremap g; g;zz
+        nnoremap g, g,zz
+        nnoremap <C-o> <C-o>zz
+    "}}}
 
     " { Command mode mapping } {{{
         cnoremap <M-b>    <S-Left>
@@ -302,49 +315,37 @@
         vnoremap < <gv
     " }}}
 
-" { Escape key mapping } {{{
-    " nnoremap q  <Esc>
-    nnoremap qq <Esc>
-    vnoremap q  <Esc>
-    inoremap qq <Esc>
-    inoremap <C-[> <Esc>
-" }}}
-
-    " { Auto-pair }{{{
-        let g:AutoPairsShortcutToggle = "<Space>p"
-        " inoremap [ []<ESC>i
-        " inoremap {<CR> {<CR>}<ESC>ko
-        " inoremap { {}<ESC>i
-        " inoremap ( ()<ESC>i
-
-        " inoremap " ""<ESC>i
-        " inoremap ' ''<ESC>i
-    "}}}
+    " { Escape key mapping } {{{
+        nnoremap q  <Esc>
+        nnoremap qq <Esc>
+        vnoremap q  <Esc>
+        inoremap qq <Esc>
+        inoremap qw <Esc>:w<CR>
+        " inoremap <C-[> <Esc>
+    " }}}
 
     " { Page scrolling }{{{
         nnoremap <C-k> <C-u>                " page up
         nnoremap <C-j> <C-d>                " page down
 
         " movement in too long lines
-        " nnoremap j gj
-        " nnoremap k gk
         nnoremap <expr> k v:count == 0 ? 'gk' : 'k'
         nnoremap <expr> j v:count == 0 ? 'gj' : 'j'
     "}}}
 
-" toggle the 'virtualedit'
-nmap ve :let &virtualedit=&virtualedit=="" ? "all" : "" \| set virtualedit?<CR>
+    " toggle the 'virtualedit'
+    nmap ve :let &virtualedit=&virtualedit=="" ? "all" : "" \| set virtualedit?<CR>
 
-" split window
-nnoremap <Space>s :vsp \| b<Space>
+    " split window
+    nnoremap <Space>s :vsp \| b<Space>
 
-" Switch Buffer in Normal mode
-nnoremap <Leader>bj :bn<CR>
-nnoremap <Leader>bk :bp<CR>
-nnoremap <Leader>bd :bdelete
+    " Switch Buffer in Normal mode
+    nnoremap <Leader>bj :bn<CR>
+    nnoremap <Leader>bk :bp<CR>
+    nnoremap <Leader>bd :bdelete
 
-" list history of command
-noremap ;; q:
+    " list history of command
+    noremap ;; q:
 
 "}}}
 
@@ -357,7 +358,6 @@ noremap ;; q:
         let g:airline#extensions#bufferline#enabled = 1
         " let g:airline#extensions#tagbar#enabled = 1
         let g:airline#extensions#branch#enabled = 1                " Show current git branch
-        let g:airline#extensions#ale#enabled = 1                   " ALE syntax
         let g:airline#extensions#tabline#enabled = 1
         let g:airline#extensions#tabline#fnamemod = ':t'           " Show file name only
         let g:airline#extensions#tabline#show_tab_nr = 1
@@ -408,110 +408,6 @@ noremap ;; q:
             endif
         " }}}
     " }}}
-
-    " { indentLine } {{{
-        let g:indentLine_enabled = 0
-        "let g:indentLine_setColors = 0
-        let g:indentLine_color_term = 50
-        let g:indentLine_char_list = ['|', '¦', '┆', '┊']
-    "}}}
-
-    " { Limelight } {{{
-        let g:limelight_conceal_ctermfg = 'gray'
-        let g:limelight_conceal_ctermfg = 240
-        let g:limelight_paragraph_span  = 1
-    "}}}
-
-    " { NERDCommenter } {{{
-        let g:NERDSpaceDelims            = 1 " Add spaces after comment delimiters by default
-        let g:NERDCommentEmptyLines      = 0
-        let g:NERDCompactSexyComs        = 1 " Use compact syntax for prettified multi-line comments
-        let g:NERDTrimTrailingWhitespace = 1 " Enable trimming of trailing whitespace when uncommenting
-        let g:NERDDefaultAlign           = 'left' " Align line-wise comment delimiters flush left instead of following code indentation
-        let g:NERDCustomDelimiters       = {'c':{'left':'//'}, 'python':{'left':'#'}, 'bash':{'left':'#'}}
-    "}}}
-
-    " { vim-argwrap } {{{
-        nnoremap <silent> <Space>a :ArgWrap<CR>
-        " let g:argwrap_tail_comma = 1              " preceded with a comma at last arg when wrapping lines.
-    "}}}
-
-    " vim-surround {{{
-        let g:surround_no_mappings = 1
-        nmap cs <Plug>Csurround
-        nmap ds <Plug>Dsurround
-        vmap s <Plug>VSurround
-        vmap gs <Plug>VgSurround
-    "}}}
-
-    " { vim-diminactive } {{{
-        " let g:diminactive_use_syntax = 1   " disable syntax highlight in inactive pane
-        hi ColorColumn ctermbg=236 guibg=#eee8d5
-    "}}}
-
-    " { vim-markdown } {{{
-        let g:vim_markdown_toc_autofit      = 1
-        let g:vim_markdown_folding_disabled = 1
-        let g:vim_markdown_no_default_key_mappings = 1
-    "}}}
-
-    " { vim-csv } {{{
-        let g:csv_no_progress = 1
-        let g:csv_strict_columns = 1
-        let g:csv_start = 1
-        let g:csv_end = 100
-        let g:csv_nomap_up=1
-        let g:csv_nomap_down=1
-    "}}}
-
-    " { virtualenv } {{{
-        let g:virtualenv_auto_activate = 1
-        let g:virtualenv_directory     = $VIRTUAL_ENV
-    "}}}
-
-    " { ale } {{{
-        let g:ale_fixers = {
-        \    'python': ['autopep8']
-        \}
-        let g:ale_python_autopep8_options = '-v -a -a -a --max-line-length=79'
-        let g:ale_linters = {
-        \   'python': ['flake8', 'pylint', 'mypy'],
-        \   'zsh': ['shell'],
-        \}
-    "}}}
-
-    " { Markdown preview } {{{
-        let g:mkdp_auto_start = 0 				  " do NOT automatically open the preview window
-        let g:mkdp_auto_close = 1 				  " auto close current preview window when change to another buffer
-        let g:mkdp_refresh_slow = 0  			  " auto refresh markdown as you edit or move the cursor
-        let g:mkdp_command_for_global = 0         " MarkdownPreview command can be use for only markdown file
-        let g:mkdp_open_to_the_world = 1   		  " preview server available to others in your network
-        let g:mkdp_open_ip = system("curl ifconfig.me")  " custom the server ip
-        let g:mkdp_port = '8017'                  " use a custom port to start server
-        let g:mkdp_browser = ''                   " no browser specified
-        let g:mkdp_echo_preview_url = 1           " echo preview page url in command line when open preview page
-        let g:mkdp_browserfunc = ''               " custom vim function name to open preview page
-        let g:mkdp_page_title = '「${name}」'     " preview page title, default with filename
-        let g:mkdp_preview_options = {
-            \ 'mkit': {},
-            \ 'katex': {},
-            \ 'uml': {},
-            \ 'maid': {},
-            \ 'disable_sync_scroll': 0,
-            \ 'sync_scroll_type': 'middle',
-            \ 'hide_yaml_meta': 1,
-            \ 'sequence_diagrams': {},
-            \ 'flowchart_diagrams': {}
-            \ }
-    "}}}
-
-    " { python-syntax } {{{
-        let python_highlight_all = 1
-        " let python_self_cls_highlight = 1
-        " let python_no_operator_highlight = 1
-        " let python_no_parameter_highlight = 0
-    "}}}
-
 "}}}
 
 "*****************************************************************************
@@ -525,15 +421,14 @@ augroup vimrc-python
   autocmd!
   autocmd FileType python setlocal expandtab shiftwidth=4 tabstop=8 colorcolumn=79
       \ formatoptions+=croq softtabstop=4
-  autocmd FileType python let g:SuperTabDefaultCompletionType = "<c-x><c-o>"
   " Multi-lines comment
   autocmd FileType python syntax region comment start=/"""/ end=/"""/
   autocmd FileType python syntax region comment start=/'''/ end=/'''/
 augroup END
 
 
-" YAML
-autocmd FileType yaml,json,json5 setlocal tabstop=2 softtabstop=2 shiftwidth=4
+" less space
+autocmd FileType lua,yaml,json,json5,html,tex setlocal tabstop=2 softtabstop=2 shiftwidth=2
 
 " vim-airline
 let g:airline#extensions#virtualenv#enabled = 1
