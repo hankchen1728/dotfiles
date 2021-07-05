@@ -14,9 +14,11 @@ nvim +PackerSync
 
 # ======= install LSPs ==========
 
+echo "\n=> Installing pyright"
 # pyright for python
 npm i -g pyright
 
+echo "\n=> Installing sumneko_lua"
 # sumneko_lua for Lua
 git clone https://github.com/sumneko/lua-language-server
 cd lua-language-server
@@ -26,4 +28,4 @@ compile/install.sh
 cd ../..
 ./3rd/luamake/luamake rebuild
 cd ..
-cp -r ./lua-language-server ${HOME}/.local/lua-language-server
+mv ./lua-language-server ${HOME}/.local/

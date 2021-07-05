@@ -74,7 +74,9 @@
     " { Completion } {{{
         " for nvim-compe setting
         set completeopt-=preview
-        set completeopt=menuone,noselect
+
+        " Filename insert completion
+        inoremap <C-f> <C-x><C-f>
     "}}}
 
     " spell check
@@ -143,14 +145,6 @@
 
     " toggle highlight search
     nnoremap <Space>f :set hlsearch! hlsearch?<CR>
-" }}}
-
-" { Completion } {{{
-
-    inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
-
-    " Filename insert completion
-    inoremap <C-f> <C-x><C-f>
 " }}}
 
 " { Search } {{{
@@ -227,11 +221,11 @@
         endif
     endfunction
 
-    " Press Enter to toggle folding except in quickfix
-    nnoremap <expr> <CR> &buftype ==# 'quickfix' ? "\<CR>" : ":call FoldOrSelect()<CR>"
+    " Press TAB to toggle folding except in quickfix
+    nnoremap <expr> <TAB> &buftype ==# 'quickfix' ? "\<CR>" : ":call FoldOrSelect()<CR>"
 
     " Press Enter to create folding
-    vnoremap <CR> zf
+    vnoremap <TAB> zf
 " }}}
 
 " { Mappings }{{{
@@ -431,4 +425,4 @@ augroup END
 autocmd FileType lua,yaml,json,json5,html,tex setlocal tabstop=2 softtabstop=2 shiftwidth=2
 
 " vim-airline
-let g:airline#extensions#virtualenv#enabled = 1
+" let g:airline#extensions#virtualenv#enabled = 1

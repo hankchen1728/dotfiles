@@ -1,5 +1,5 @@
 local lsp_config = require('lspconfig')
-local cmd = vim.cmd
+-- local cmd = vim.cmd
 
 
 -- Setting keybinds
@@ -45,15 +45,13 @@ function on_attach(client, bufnr)
 end
 
 -- Setup servers for languages
--- local sumneko_root_path = "/Users/hankchen/.local/lua-language-server"
 local sumneko_root_path = vim.fn.expand("$HOME").."/.local/lua-language-server"
 
 local servers = {
   pyright = {},
-  clangd = {},
-  svls = {}, -- Language server for verilog and SystemVerilog
+  -- clangd = {},
+  -- svls = {}, -- Language server for verilog and SystemVerilog
   sumneko_lua = {
-    -- cmd = {'lua-language-server'},
     cmd = {sumneko_root_path .. "/bin/macOS/lua-language-server", "-E", sumneko_root_path .. "/main.lua"},
     -- root_dir = vim.loop.cwd,
     settings = {

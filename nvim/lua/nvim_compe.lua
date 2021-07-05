@@ -2,26 +2,26 @@
 vim.o.completeopt = "menuone,noselect"
 
 require"compe".setup {
-    enabled = true,
-    autocomplete = true,  -- set `false` to diable auto popup
-    debug = false,
-    min_length = 1,
-    preselect = "enable",
-    throttle_time = 80,
-    source_timeout = 200,
-    incomplete_delay = 400,
-    max_abbr_width = 100,
-    max_kind_width = 100,
-    max_menu_width = 100,
-    documentation = true,
-    source = {
-        path = true,
-        buffer = {kind = "﬘", true}, -- require "nerd-font"
-        calc = true,
-        nvim_lsp = true,
-        nvim_lua = true,
-        -- luasnip = {kind = "﬌", true},
-    }
+  enabled = true,
+  autocomplete = true,  -- set `false` to diable auto popup
+  debug = false,
+  min_length = 1,
+  preselect = "enable",
+  throttle_time = 80,
+  source_timeout = 200,
+  incomplete_delay = 400,
+  max_abbr_width = 100,
+  max_kind_width = 100,
+  max_menu_width = 100,
+  documentation = true,
+  source = {
+    path = true,
+    buffer = {kind = "﬘", true}, -- require "nerd-font"
+    calc = true,
+    nvim_lsp = true,
+    nvim_lua = true,
+    -- luasnip = {kind = "﬌", true},
+  }
 }
 
 -- use tab to navigate completion menu
@@ -30,8 +30,8 @@ local t = function(str)
 end
 
 local check_back_space = function()
-    local col = vim.fn.col('.') - 1
-    return col == 0 or vim.fn.getline('.'):sub(col, col):match('%s') ~= nil
+  local col = vim.fn.col('.') - 1
+  return col == 0 or vim.fn.getline('.'):sub(col, col):match('%s') ~= nil
 end
 
 -- Use (s-)tab to:
@@ -61,18 +61,18 @@ _G.s_tab_complete = function()
 end
 
 function _G.completions()
-  -- local npairs = require("nvim-autopairs")
+  local npairs = require("nvim-autopairs")
   if vim.fn.pumvisible() == 1 then
       if vim.fn.complete_info()["selected"] ~= -1 then
           return vim.fn["compe#confirm"]("<CR>")
       end
   end
-  -- return npairs.check_break_line_char()
-  return t "<C-g>u<CR>"
+  return npairs.check_break_line_char()
+  -- return t "<C-g>u<CR>"
 end
 
-vim.api.nvim_set_keymap("i", "<CR>", "compe#confirm('<CR>')", {expr = true, silent = true})
--- vim.api.nvim_set_keymap("i", "<CR>", "v:lua.completions()", {expr = true, noremap = true})
+-- vim.api.nvim_set_keymap("i", "<CR>", "compe#confirm('<CR>')", {expr = true, silent = true})
+vim.api.nvim_set_keymap("i", "<CR>", "v:lua.completions()", {expr = true, noremap = true})
 vim.api.nvim_set_keymap("i", "<Tab>", "v:lua.tab_complete()", {expr = true})
 vim.api.nvim_set_keymap("s", "<Tab>", "v:lua.tab_complete()", {expr = true})
 vim.api.nvim_set_keymap("i", "<S-Tab>", "v:lua.s_tab_complete()", {expr = true})

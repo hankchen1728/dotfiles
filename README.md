@@ -1,43 +1,32 @@
-# Configuration Files
+## Configuration Files
 
-## Bash
-```
-./bash/.bashrc
-```
+### Alacritty (terminal)
+See [README.md](https://github.com/hankchen1728/dotfiles/blob/master/alacritty/README.md)
 
-## vim
-```
-./vim/.vimrc
-```
+### Tmux
+See [README.md](https://github.com/hankchen1728/dotfiles/blob/master/tmux/README.md)
 
-#### 1. About ```virtualenv``` on ```vim```
-First add the following line to `.vimrc` ,
-```
-let g:virtualenv_directory = $VIRTUAL_ENV
+### Bash
+Source the file `bash/.bashrc`:
+```sh
+source bash/.bashrc
 ```
 
-and then link virtual environments path to `$VIRTUAL_ENV`
-```
-$ ln -s <Virtualenv_PATH> ${VIRTUAL_ENV}/<Virtualenv_NAME>
-```
+### Fish shell
+Put the file `fish/config.fish` at the path `${HOME}/.config/fish/config.fish`
 
-## Neovim
-```
-./nvim/init.vim
-```
+### ~~Vim~~
+~~See [README.md](https://github.com/hankchen1728/dotfiles/blob/master/vim/README.md)~~
 
-## source
-```
-/source/.source
-```
+### Neovim
+See [README.md](https://github.com/hankchen1728/dotfiles/blob/master/nvim/README.md)
 
-## Installation
-Shell scripts install **python3** from source
-```
-/installation/install_python3.sh
-```
+### Installation
+Shell script for installing **python3** from source `installation/install_python3.sh`
 
-## Check NVidia GPU Environment
+Also containing some tools, e.g. `vim`, `tmux`, `fish`
+
+### Check NVidia GPU Environment
 1. CUDA 8.0, 9.0, 9.1, 10.0
 ```sh
 $ nvcc --version | grep "release" | awk '{print $6}'
@@ -52,5 +41,6 @@ $ locate cudnn | grep "libcudnn.so." | tail -n1 | sed -r 's/^.*\.so\.//'
 ```sh
 $ locate nccl | grep "libnccl.so" | tail -n1 | sed -r 's/^.*\.so\.//'
 # 2.4.8
+```
 
 ## Future Work

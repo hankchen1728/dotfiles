@@ -13,26 +13,6 @@ return require('packer').startup(function()
   -- use "akinsho/nvim-bufferline.lua"
   -- use "glepnir/galaxyline.nvim"
 
-  -- auto pair brackets
-  use {
-    'jiangmiao/auto-pairs',
-    config = vim.cmd [[
-      let g:AutoPairsShortcutBackInsert = ''
-      let g:AutoPairsShortcutToggle = "<leader>p"
-      let g:AutoPairsMapCR = 1
-    ]]
-  }
-  use {
-    'tpope/vim-surround',
-    config = vim.cmd [[
-      let g:surround_no_mappings = 1
-      nmap cs <Plug>Csurround
-      nmap ds <Plug>Dsurround
-      vmap s  <Plug>VSurround
-      vmap gs <Plug>VgSurround
-    ]]
-  }
-
   -- Colorscheme and highlight
   use 'joshdick/onedark.vim'
   use {
@@ -77,6 +57,10 @@ return require('packer').startup(function()
       let g:NERDDefaultAlign           = 'left'
 
       let g:NERDCustomDelimiters       = {'c':{'left':'//'}, 'python':{'left':'#'}, 'bash':{'left':'#'}}
+
+      " Use <Backspace> to toggle comment
+      nmap <BS> <plug>NERDCommenterToggle
+      vmap <BS> <plug>NERDCommenterToggle
     ]]
   }
 
@@ -101,6 +85,33 @@ return require('packer').startup(function()
   }
 
   use "kyazdani42/nvim-web-devicons"
+
+  -- auto pair brackets
+  -- use {
+  --   'jiangmiao/auto-pairs',
+  --   config = vim.cmd [[
+  --     let g:AutoPairsShortcutBackInsert = ''
+  --     let g:AutoPairsShortcutToggle = "<leader>p"
+  --     let g:AutoPairsMapCR = 1
+  --   ]]
+  -- }
+  use {
+    "windwp/nvim-autopairs",
+    event = "InsertEnter",
+    config = function()
+        require("nvim-autopairs").setup()
+    end
+  }
+  use {
+    'tpope/vim-surround',
+    config = vim.cmd [[
+      let g:surround_no_mappings = 1
+      nmap cs <Plug>Csurround
+      nmap ds <Plug>Dsurround
+      vmap s  <Plug>VSurround
+      vmap gs <Plug>VgSurround
+    ]]
+  }
 
   -- Syntax highlight
   use {
@@ -131,17 +142,29 @@ return require('packer').startup(function()
     ft = "markdown",
     run = ":call mkdp#util#install()",
     config = vim.cmd [[
-      let g:mkdp_auto_start = 0 				  " do NOT automatically open the preview window
-      let g:mkdp_auto_close = 1 				  " auto close current preview window when change to another buffer
-      let g:mkdp_refresh_slow = 0  			  " auto refresh markdown as you edit or move the cursor
-      let g:mkdp_command_for_global = 0         " MarkdownPreview command can be use for only markdown file
-      let g:mkdp_open_to_the_world = 1   		  " preview server available to others in your network
-      let g:mkdp_open_ip = system("curl ifconfig.me")  " custom the server ip
-      let g:mkdp_port = '8017'                  " use a custom port to start server
-      let g:mkdp_browser = ''                   " no browser specified
-      let g:mkdp_echo_preview_url = 1           " echo preview page url in command line when open preview page
-      let g:mkdp_browserfunc = ''               " custom vim function name to open preview page
-      let g:mkdp_page_title = '「${name}」'     " preview page title, default with filename
+      " do NOT automatically open the preview window
+      let g:mkdp_auto_start = 0
+
+      " auto close current preview window when change to another buffer
+      let g:mkdp_auto_close = 1
+
+      " auto refresh markdown as you edit or move the cursor
+      let g:mkdp_refresh_slow = 0
+
+      " preview server available to others in your network
+      let g:mkdp_open_to_the_world = 1
+
+      " custom the server ip
+      " let g:mkdp_open_ip = system("curl ifconfig.me")
+
+      " use a custom port to start server
+      let g:mkdp_port = '8017'
+
+      " echo preview page url in command line when open preview page
+      let g:mkdp_echo_preview_url = 1
+
+      " preview page title, default with filename
+      let g:mkdp_page_title = '「${name}」'
     ]]
   }
   use 'iamcco/mathjax-support-for-mkdp'       -- mathjax support for markdown-preview.vim plugin
