@@ -3,7 +3,7 @@
 ## Installation
 - For **macOS** and **Windows**, download the prebuilt binaries from [GitHub releasesage](https://github.com/alacritty/alacritty/releases).
     - If installing the binaries on macOS, you can make a soft link of `/Applications/Alacritty.app/Contents/MacOS/alacritty` to one of the path in the environment variable `$PATH`, then it will be able to call the command `alacritty` directly, for example:
-    ```
+    ```sh
     $ ln -s /Applications/Alacritty.app/Contents/MacOS/alacritty ~/.local/bin/alacritty
     ```
 - Otherwise, see the detail installation [ instruction ](https://github.com/alacritty/alacritty/blob/master/INSTALL.md)
@@ -14,6 +14,6 @@
 
 ### Meta key on macOS
 Add put the following key binding in the `alacritty.yml`, for detail, see [issue#62](https://github.com/alacritty/alacritty/issues/62),
-```
+```yaml
 - { key: A,         mods: Alt,       chars: "\x1ba"                        }
 ```
