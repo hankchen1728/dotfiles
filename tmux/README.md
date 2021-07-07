@@ -1,12 +1,12 @@
 # Configuration for tmux
 
 ## Configuration File
-For `tmux` >= 2.9, please use the `./tmux/.tmux3.conf` or source the config file
+For `tmux` >= 2.9, please use the `./tmux/.tmux.conf` or source the config file
 ```tmux
 source-file tmux/.tmux3.conf
 ```
 
-For lower and `tmux` >= 2.6, please use the `./tmux/.tmux.conf` or source the config file
+For lower and `tmux` >= 2.6, please use the `./tmux/.tmux2.conf` or source the config file
 ```tmux
 source-file tmux/.tmux.conf
 ```

@@ -13,7 +13,7 @@
     set showmatch                          " match parentheses
     set diffopt+=iwhite                    " ignore white space in vimdiff
     set timeout timeoutlen=400             " set timeout to use double key in imap confortablely
-    " set updatetime=300
+    set updatetime=300
     set mouse=a                            " enable mouse
     set encoding=utf-8
     set hidden                             " hidden unsaved buffers instead of closing them
@@ -26,6 +26,8 @@
     set conceallevel=2                     " concealment
     set signcolumn=yes
     " set ambiwidth=double       " Double char width
+
+    set guifont=DroidSansMono\ Nerd\ Font:h18
 
     " { Clipboard }{{{
         if has('clipboard')
@@ -121,27 +123,34 @@
 " { Color } {{{
     set background=dark
     set synmaxcol=150
-    set t_Co=256               " 256 colors
+    " set t_Co=256               " 256 colors
     " set term=xterm-256color
+
+    let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+    let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+    set termguicolors
 
     colorscheme onedark
     hi Normal guibg=NONE ctermbg=NONE
     let g:onedark_termcolors = 256
     let g:onedark_terminal_italics = 1
 
-    " let g:python_highlight_all = 1              " vim-python syntax highlight
+    " Highligh search
+    hi Search cterm=reverse ctermbg=none ctermfg=none
+    hi Search gui=reverse guibg=none guifg=none
+    " hi linenr guifg=red
 
-    hi Search cterm=reverse ctermbg=none ctermfg=none             " Search match
-    hi CursorLineNr cterm=bold ctermfg=Green ctermbg=none         " Cursor Line Number
-    " hi CursorLine cterm=none ctermbg=094 ctermfg=none           " Cursor Line
+    hi CursorLineNr cterm=bold gui=bold ctermfg=Green guifg=#87ff00     " Cursor Line Number
+    " hi CursorLine cterm=none ctermbg=none ctermfg=none           " Cursor Line
     " hi String ctermfg=214
-    hi Visual cterm=bold ctermbg=240 guibg=Grey                   " Selected block
-    hi Folded ctermbg=233
+    hi Visual cterm=bold ctermbg=240 guibg=Grey                         " Selected block
+    hi Folded ctermbg=233 guibg=#080808
 
-    " High light unwanted spaces in end of line
-    highlight ExtraWhitespace ctermbg=239 guibg=Grey
-    autocmd BufEnter * if &ft != 'help' | match ExtraWhitespace /\s\+$/ | endif
-    autocmd BufEnter * if &ft == 'help' | match none /\s\+$/ | endif
+    " { ExtraWhitespace } {{{
+        " highlight ExtraWhitespace ctermbg=239 guibg=Grey
+        " autocmd BufEnter * if &ft != 'help' | match ExtraWhitespace /\s\+$/ | endif
+        " autocmd BufEnter * if &ft == 'help' | match none /\s\+$/ | endif
+    " }}}
 
     " toggle highlight search
     nnoremap <Space>f :set hlsearch! hlsearch?<CR>
@@ -181,15 +190,22 @@
     " use treesitter as folding method
     set foldexpr=nvim_treesitter#foldexpr()
 
+    hi SymbolFold ctermfg=000 guifg=#00d7ff
+    sign define foldLine text=  texthl=SymbolFold
+
     " folding display text
-    set fillchars=fold:\               " use trailing space as the padding of folding
+    set fillchars=fold:\ " use trailing space as the padding of folding
     set foldtext=MyFoldText()
     function! MyFoldText()
+        " place a sign at start line
+        let folded_line_num = v:foldend - v:foldstart
+        exec ":sign place 2 name=foldLine line=" . v:foldstart
         let head = getline(v:foldstart)
         let head = substitute(head, '{{{', '', 'g')
         let head = substitute(head, '\s\+$', '', 'g')
         let tail = substitute(trim(getline(v:foldend)), '.*}}}', '', 'g')
-        return head . ' ... ' . tail
+        let fillcharcount = &textwidth - len(head) - len(tail) - 5 - len(folded_line_num)
+        return head . ' ... ' . tail . ' ' . repeat('-', fillcharcount) . ' (' . folded_line_num . ' L)'
     endfunction
 
     " Open the folding automatically in conditions of
@@ -208,10 +224,9 @@
     set foldopen=hor,mark,percent,quickfix,search,tag,undo
 
     " fold methods for different filetypes
-    autocmd FileType tmux,zsh,snippets setlocal foldenable foldmethod=marker foldmarker={{{,#\ }}}
+    autocmd FileType tmux,csh,zsh,snippets setlocal foldenable foldmethod=marker foldmarker={{{,#\ }}}
     autocmd FileType vim setlocal foldenable foldmethod=marker
     autocmd FileType json,json5 setlocal foldenable foldmethod=syntax
-    " autocmd FileType python setlocal foldenable foldmethod=manual
 
     function! FoldOrSelect()
         if foldlevel(line('.')) == 0
@@ -226,6 +241,40 @@
 
     " Press Enter to create folding
     vnoremap <TAB> zf
+" }}}
+
+" { Buffer saving/loading/exit } {{{
+    " auto save and restore
+    set vop=folds,cursor,curdir  " save folds, cursor position, working directory only
+    let blacklist = ['qf']
+    autocmd BufWinLeave ?* if index(blacklist, &ft) < 0 | mkview
+    autocmd BufRead ?* if index(blacklist, &ft) < 0 | silent! loadview
+
+    " FIXME: auto start LSP
+    autocmd BufEnter ?* if index(blacklist, &ft) < 0 | LspStart
+
+    " Auto search and clean trailing space after file written.
+    autocmd BufWritePre * %s/\s\+$//e
+
+    " save and (force) exit
+    noremap Q :q<CR>
+    noremap ! :q!<CR>
+    " noremap X :x<CR>
+    nnoremap <Space>w :w<CR>
+    " nnoremap <Space>x :x<CR>
+    autocmd WinEnter * if &buftype ==# 'quickfix' && winnr('$') == 1 | bdelete | endif
+
+    function! QuitOrBufferDelete()
+        let buf_len = (len(filter(range(1, bufnr('$')), 'buflisted(v:val)')) == 1)
+        let empty_name = (expand('%') == '')
+        if (buf_len && empty_name)
+            exec 'q'
+        else
+            exec 'bd'
+        endif
+    endfunction
+    nnoremap <silent> <Space>q :call QuitOrBufferDelete()<CR>
+
 " }}}
 
 " { Mappings }{{{
@@ -413,16 +462,13 @@ filetype plugin indent on
 " vim-python
 augroup vimrc-python
   autocmd!
-  autocmd FileType python setlocal expandtab shiftwidth=4 tabstop=8 colorcolumn=79
-      \ formatoptions+=croq softtabstop=4
+  autocmd FileType python setlocal colorcolumn=79 textwidth=79 formatoptions+=crq
   " Multi-lines comment
-  autocmd FileType python syntax region comment start=/"""/ end=/"""/
-  autocmd FileType python syntax region comment start=/'''/ end=/'''/
+  " autocmd FileType python syntax region comment start=/"""/ end=/"""/
+  " autocmd FileType python syntax region comment start=/'''/ end=/'''/
 augroup END
 
 
 " less space
+autocmd FileType csh,zsh,sh,tmux setlocal tabstop=2 softtabstop=2 shiftwidth=2
 autocmd FileType lua,yaml,json,json5,html,tex setlocal tabstop=2 softtabstop=2 shiftwidth=2
-
-" vim-airline
-" let g:airline#extensions#virtualenv#enabled = 1

@@ -99,25 +99,13 @@ fi
 # colored GCC warnings and errors
 #export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
 
-# some more ls aliases
-alias ll='ls -alF'
-alias la='ls -A'
-alias l='ls -CF'
-
-# Add rm aliases
-alias rm='rm -i'
-
-# Add myself python alias
-
-# Add an "alert" alias for long running commands.  Use like so:
-#   sleep 10; alert
-alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
 
 # Alias definitions.
 # You may want to put all your additions into a separate file like
 # ~/.bash_aliases, instead of adding them here directly.
 # See /usr/share/doc/bash-doc/examples in the bash-doc package.
 
+source ${HOME}/.config/sh/.aliases
 if [ -f ~/.bash_aliases ]; then
     . ~/.bash_aliases
 fi
@@ -143,7 +131,7 @@ fi
 #        . "/opt/anaconda3/5.1.
 
 # Set vim for default editor
-export VISUAL=vim
+export VISUAL=nvim
 export EDITOR="$VISUAL"
 
 # Add the path of self installed binary
@@ -155,7 +143,10 @@ if [ -f '${HOME}/google-cloud-sdk/path.bash.inc' ]; then . '${HOME}/google-cloud
 # The next line enables shell command completion for gcloud.
 if [ -f '${HOME}/google-cloud-sdk/completion.bash.inc' ]; then . '${HOME}/google-cloud-sdk/completion.bash.inc'; fi
 
-# source ${HOME}/.config/source/.source
+# some environment variable
+source ${HOME}/.config/sh/.source
 
 # completion for alacritty
-source ${HOME}/.config/alacritty/extra/completions/alacritty.bash
+if [ -f '${HOME}/.config/alacritty' ]; then
+  source ${HOME}/.config/alacritty/extra/completions/alacritty.bash
+fi

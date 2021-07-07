@@ -551,7 +551,7 @@ noremap ;; q:
 
     " { virtualenv } {{{
         let g:virtualenv_auto_activate = 1
-        let g:virtualenv_directory     = $VIRTUAL_ENV
+        let g:virtualenv_directory     = $VIRTUAL_ENV_ROOT
     "}}}
 
     " { jedi-vim } {{{

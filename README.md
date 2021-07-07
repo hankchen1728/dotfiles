@@ -8,13 +8,19 @@ See [README.md](https://github.com/hankchen1728/dotfiles/blob/master/alacritty/R
 See [README.md](https://github.com/hankchen1728/dotfiles/blob/master/tmux/README.md)
 
 ## Bash
-Source the file `bash/.bashrc`:
+Source the file `sh/.bashrc`:
 ```sh
-source bash/.bashrc
+source sh/.bashrc
 ```
 
-## Fish shell
-Put the file `fish/config.fish` at the path `${HOME}/.config/fish/config.fish`
+## Zsh
+Source the file `sh/.zshrc`:
+```sh
+source sh/.zshrc
+```
+
+## ~~Fish shell~~
+~~Put the file `fish/config.fish` at the path `${HOME}/.config/fish/config.fish`~~
 
 ## ~~Vim~~
 ~~See [README.md](https://github.com/hankchen1728/dotfiles/blob/master/vim/README.md)~~

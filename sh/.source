@@ -1,0 +1,10 @@
+# Module path for local packages
+export MODULEPATH=$HOME/local/modules/modulefiles:$MODULEPATH
+
+# export VIRTUAL_ENV_ROOT=/work/cardiovascular/envs/
+export VIRTUAL_ENV_ROOT=${HOME}/.virtual_envs/
+
+# Kaggle config path
+export KAGGLE_CONFIG_DIR=${HOME}/.config/kaggle
+
+# vim:filetype=csh

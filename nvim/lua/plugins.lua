@@ -23,6 +23,12 @@ return require('packer').startup(function()
         hi ColorColumn ctermbg=236 guibg=#eee8d5
     ]]
   }
+  use {
+    'norcalli/nvim-colorizer.lua',
+    config = [[require'colorizer'.setup()]]
+  }
+
+  -- Helper tools
   use 'google/vim-searchindex'           -- Search index helper
   use {
     'FooSoft/vim-argwrap',        -- Wrap and unwrap function arguments, lists, and dictionaries in Vim.
@@ -86,15 +92,16 @@ return require('packer').startup(function()
 
   use "kyazdani42/nvim-web-devicons"
 
-  -- auto pair brackets
-  -- use {
-  --   'jiangmiao/auto-pairs',
-  --   config = vim.cmd [[
-  --     let g:AutoPairsShortcutBackInsert = ''
-  --     let g:AutoPairsShortcutToggle = "<leader>p"
-  --     let g:AutoPairsMapCR = 1
-  --   ]]
-  -- }
+  use {
+    "nvim-telescope/telescope.nvim",
+    requires = {
+      {"nvim-lua/popup.nvim"},
+      {"nvim-lua/plenary.nvim"},
+      {"nvim-telescope/telescope-fzf-native.nvim", run = "make"},
+    },
+    config = [[ require"nvim-telescope" ]]
+  }
+
   use {
     "windwp/nvim-autopairs",
     event = "InsertEnter",
