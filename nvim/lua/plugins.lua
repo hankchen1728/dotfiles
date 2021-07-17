@@ -6,15 +6,27 @@ return require('packer').startup(function()
   -- Packer can manage itself
   use 'wbthomason/packer.nvim'
 
+  use {
+    'kyazdani42/nvim-tree.lua',
+    config = vim.cmd [[
+      nnoremap <F1> :NvimTreeToggle<CR>
+      let g:nvim_tree_highlight_opened_files = 1
+      let g:nvim_tree_auto_open = 1
+    ]]
+  }
+
   -- statusline
   use 'vim-airline/vim-airline'
   use 'vim-airline/vim-airline-themes'
   use 'tpope/vim-fugitive'               -- git helper for vim
-  -- use "akinsho/nvim-bufferline.lua"
+  use {
+    "akinsho/nvim-bufferline.lua",
+    config = [[ require"nvim-bufferline" ]],
+  }
   -- use "glepnir/galaxyline.nvim"
 
   -- Colorscheme and highlight
-  use 'joshdick/onedark.vim'
+  use 'navarasu/onedark.nvim'
   use {
     'blueyed/vim-diminactive',     -- dim inactive windows
     config = vim.cmd [[
@@ -25,11 +37,21 @@ return require('packer').startup(function()
   }
   use {
     'norcalli/nvim-colorizer.lua',
-    config = [[require'colorizer'.setup()]]
+    config = require('colorizer').setup()
   }
 
   -- Helper tools
   use 'google/vim-searchindex'           -- Search index helper
+
+  -- for alignment
+  use 'AndrewRadev/splitjoin.vim'
+  use {
+   'junegunn/vim-easy-align',
+    config = vim.cmd [[
+      xmap ga <Plug>(EasyAlign)
+      nmap ga <Plug>(EasyAlign)
+    ]]
+  }
   use {
     'FooSoft/vim-argwrap',        -- Wrap and unwrap function arguments, lists, and dictionaries in Vim.
     config = vim.cmd [[
@@ -73,8 +95,8 @@ return require('packer').startup(function()
   -- LSP and auto completion
   use {
     'neovim/nvim-lspconfig',
+    config = [[ require"nvim-lspconfig" ]],
     event = "BufRead",
-    config = [[ require"nvim-lspconfig" ]]
   }
   use {
     "onsails/lspkind-nvim",
@@ -88,6 +110,25 @@ return require('packer').startup(function()
     'hrsh7th/nvim-compe',
     event = "InsertEnter",
     config = [[ require'nvim_compe' ]]
+  }
+
+  -- Formatter
+  use {
+    "sbdchd/neoformat",
+    cmd = "Neoformat",
+    config = [[ require"neoformat" ]]
+  }
+
+  -- tag viewer
+  use {
+    "liuchengxu/vista.vim",
+    config = vim.cmd[[
+      let g:vista_icon_indent = ["╰─▸ ", "├─▸ "]
+      let g:vista_default_executive = "nvim_lsp"
+
+      " toggle Vista window
+      nnoremap <space>v :Vista!!<CR>
+    ]]
   }
 
   use "kyazdani42/nvim-web-devicons"
@@ -175,19 +216,5 @@ return require('packer').startup(function()
     ]]
   }
   use 'iamcco/mathjax-support-for-mkdp'       -- mathjax support for markdown-preview.vim plugin
-
-  -- CSV
-  use {
-    'chrisbra/csv.vim',
-    config = vim.cmd [[
-      let g:csv_no_progress = 1
-      let g:csv_strict_columns = 1
-      let g:csv_start = 1
-      let g:csv_end = 100
-      let g:csv_nomap_up=1
-      let g:csv_nomap_down=1
-    ]]
-  }
-
 
 end)

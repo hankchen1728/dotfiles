@@ -32,7 +32,7 @@ require("telescope").setup {
     file_sorter = require "telescope.sorters".get_fuzzy_file,
     file_ignore_patterns = {},
     generic_sorter = require "telescope.sorters".get_generic_fuzzy_sorter,
-    shorten_path = true,
+    shorten = true,
     winblend = 0,
     border = {},
     borderchars = {"─", "│", "─", "│", "╭", "╮", "╯", "╰"},
@@ -62,3 +62,11 @@ require("telescope").setup {
 
 require("telescope").load_extension("fzf")
 -- require("telescope").load_extension("media_files")
+
+-- Mappings
+local set_keymap = vim.api.nvim_set_keymap
+local opts = {noremap = true, silent = true}
+set_keymap("n", "<Leader>ff", [[<Cmd> Telescope find_files <CR>]], opts)
+set_keymap("n", "<Leader>fb", [[<Cmd>Telescope buffers<CR>]], opts)
+set_keymap("n", "<Leader>fh", [[<Cmd>Telescope help_tags<CR>]], opts)
+set_keymap("n", "<Leader>fo", [[<Cmd>Telescope oldfiles<CR>]], opts)

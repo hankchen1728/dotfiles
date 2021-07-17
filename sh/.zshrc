@@ -12,18 +12,30 @@ ZSH_THEME="bullet-train"
 
 ## Bullet train theme
 BULLETTRAIN_PROMPT_ORDER=(
-    # context
-    status
+    virtualenv
     git
+    status
     dir
     cmd_exec_time
 )
 
+# Show exit code of last command
+BULLETTRAIN_STATUS_EXIT_SHOW=true
+
+BULLETTRAIN_DIR_FG=221
+BULLETTRAIN_VIRTUALENV_FG=58
+
+# git symbol
+BULLETTRAIN_GIT_ADDED=" %F{034}✚%F{black}"  # enhance green color
+BULLETTRAIN_GIT_UNTRACKED=" %F{172}✭%F{black}"
+BULLETTRAIN_GIT_MODIFIED=" %F{026}✹%F{black}"
+
 ## zsh plugins
+# Issue: autojump and zsh-syntax-highlighting are too slow
 plugins=(
     git
     history-substring-search
-    autojump
+    # autojump
     history
     zsh-autosuggestions
     zsh-syntax-highlighting
@@ -94,11 +106,22 @@ plugins=(
 
 source $ZSH/oh-my-zsh.sh
 source $HOME/.config/sh/.aliases
+source $HOME/.config/sh/.functions
 
 export VISUAL="nvim"
 export EDITOR="$VISUAL"
 export TERMINAL='alacritty'
 export PATH="$HOME/.local/bin:$PATH"
+
+bindkey '^P' history-substring-search-up
+bindkey '^N' history-substring-search-down
+
+if [[ "$TERM" =~ "xterm" ]]; then
+    export TERM=xterm-256color
+elif [ "$TERM" = "screen" -o "$TERM" = "screen-256color" ]; then
+    export TERM=screen-256color
+    unset TERMCAP
+fi
 
 # User configuration
 

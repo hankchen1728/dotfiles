@@ -1,6 +1,6 @@
 " { Basic } {{{
-    syntax on
-    syntax sync fromstart
+    " syntax sync fromstart
+    syntax enable
     set nocompatible
     set ruler                              " show file name, lines, etc.
     set showcmd                            " show uncomplete command
@@ -27,6 +27,7 @@
     set signcolumn=yes
     " set ambiwidth=double       " Double char width
 
+    set termguicolors
     set guifont=DroidSansMono\ Nerd\ Font:h18
 
     " { Clipboard }{{{
@@ -91,6 +92,24 @@
     endif
 " }}}
 
+" { filetype plugin }{{{
+
+    filetype plugin indent on
+
+    " vim-python
+    augroup vimrc-python
+      autocmd!
+      autocmd FileType python setlocal colorcolumn=79 textwidth=79 formatoptions+=crq
+      " Multi-lines comment
+      " autocmd FileType python syntax region comment start=/"""/ end=/"""/
+      " autocmd FileType python syntax region comment start=/'''/ end=/'''/
+    augroup END
+
+    " less space
+    autocmd FileType csh,zsh,sh,tmux setlocal tabstop=2 softtabstop=2 shiftwidth=2
+    autocmd FileType lua,yaml,json,json5,html,tex setlocal tabstop=2 softtabstop=2 shiftwidth=2
+"}}}
+
 " { Windows/Buffers settings } {{{
 
     " jump between buffers
@@ -121,30 +140,25 @@
 "}}}
 
 " { Color } {{{
-    set background=dark
+    " set background=dark
     set synmaxcol=150
     " set t_Co=256               " 256 colors
-    " set term=xterm-256color
 
-    let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
-    let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
-    set termguicolors
-
+    let g:onedark_style = 'cool'
     colorscheme onedark
-    hi Normal guibg=NONE ctermbg=NONE
-    let g:onedark_termcolors = 256
-    let g:onedark_terminal_italics = 1
 
     " Highligh search
     hi Search cterm=reverse ctermbg=none ctermfg=none
     hi Search gui=reverse guibg=none guifg=none
-    " hi linenr guifg=red
+
+    " for transparent background
+    hi Normal guibg=NONE ctermbg=NONE
 
     hi CursorLineNr cterm=bold gui=bold ctermfg=Green guifg=#87ff00     " Cursor Line Number
     " hi CursorLine cterm=none ctermbg=none ctermfg=none           " Cursor Line
     " hi String ctermfg=214
     hi Visual cterm=bold ctermbg=240 guibg=Grey                         " Selected block
-    hi Folded ctermbg=233 guibg=#080808
+    " hi Folded ctermbg=233 guibg=#000000
 
     " { ExtraWhitespace } {{{
         " highlight ExtraWhitespace ctermbg=239 guibg=Grey
@@ -185,12 +199,12 @@
     set foldenable                                           " default folding
 
     " default foldmethod
-    setlocal foldmethod=expr
+    set foldmethod=expr
 
     " use treesitter as folding method
     set foldexpr=nvim_treesitter#foldexpr()
 
-    hi SymbolFold ctermfg=000 guifg=#00d7ff
+    hi SymbolFold ctermfg=44 guifg=#00d7d7
     sign define foldLine text=  texthl=SymbolFold
 
     " folding display text
@@ -239,7 +253,7 @@
     " Press TAB to toggle folding except in quickfix
     nnoremap <expr> <TAB> &buftype ==# 'quickfix' ? "\<CR>" : ":call FoldOrSelect()<CR>"
 
-    " Press Enter to create folding
+    " Press TAB to create folding
     vnoremap <TAB> zf
 " }}}
 
@@ -251,7 +265,7 @@
     autocmd BufRead ?* if index(blacklist, &ft) < 0 | silent! loadview
 
     " FIXME: auto start LSP
-    autocmd BufEnter ?* if index(blacklist, &ft) < 0 | LspStart
+    " autocmd BufEnter ?* if index(blacklist, &ft) < 0 | LspStart
 
     " Auto search and clean trailing space after file written.
     autocmd BufWritePre * %s/\s\+$//e
@@ -383,8 +397,8 @@
     nnoremap <Space>s :vsp \| b<Space>
 
     " Switch Buffer in Normal mode
-    nnoremap <Leader>bj :bn<CR>
-    nnoremap <Leader>bk :bp<CR>
+    nnoremap <space>n :bn<CR>
+    nnoremap <space>p :bp<CR>
     nnoremap <Leader>bd :bdelete
 
     " list history of command
@@ -398,15 +412,15 @@
         let g:airline_theme = 'ayu_dark'
         let g:airline_powerline_fonts = 1                          " enable powerline-fonts
         let g:airline_skip_empty_sections = 1
-        let g:airline#extensions#bufferline#enabled = 1
+        " let g:airline#extensions#bufferline#enabled = 1
         " let g:airline#extensions#tagbar#enabled = 1
         let g:airline#extensions#branch#enabled = 1                " Show current git branch
-        let g:airline#extensions#tabline#enabled = 1
-        let g:airline#extensions#tabline#fnamemod = ':t'           " Show file name only
-        let g:airline#extensions#tabline#show_tab_nr = 1
-        let g:airline#extensions#tabline#tab_nr_type = 1
-        let g:airline#extensions#tabline#buffer_nr_show=1          " Show the index of buffer
-        let g:airline#extensions#tabline#buffer_idx_mode = 0
+        " let g:airline#extensions#tabline#enabled = 1
+        " let g:airline#extensions#tabline#fnamemod = ':t'           " Show file name only
+        " let g:airline#extensions#tabline#show_tab_nr = 1
+        " let g:airline#extensions#tabline#tab_nr_type = 1
+        " let g:airline#extensions#tabline#buffer_nr_show=1          " Show the index of buffer
+        " let g:airline#extensions#tabline#buffer_idx_mode = 0
 
         nmap <leader>1 <Plug>AirlineSelectTab1
         nmap <leader>2 <Plug>AirlineSelectTab2
@@ -452,23 +466,3 @@
         " }}}
     " }}}
 "}}}
-
-"*****************************************************************************
-""" Custom configs
-"*****************************************************************************
-
-filetype plugin indent on
-
-" vim-python
-augroup vimrc-python
-  autocmd!
-  autocmd FileType python setlocal colorcolumn=79 textwidth=79 formatoptions+=crq
-  " Multi-lines comment
-  " autocmd FileType python syntax region comment start=/"""/ end=/"""/
-  " autocmd FileType python syntax region comment start=/'''/ end=/'''/
-augroup END
-
-
-" less space
-autocmd FileType csh,zsh,sh,tmux setlocal tabstop=2 softtabstop=2 shiftwidth=2
-autocmd FileType lua,yaml,json,json5,html,tex setlocal tabstop=2 softtabstop=2 shiftwidth=2
