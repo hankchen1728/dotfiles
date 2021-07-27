@@ -6,9 +6,9 @@ require'bufferline'.setup{
     },
   },
   options = {
+    offsets = {{filetype = "NvimTree", text = "File Explorer"}},
     numbers = "buffer_id",
     mappings = true,
-    offsets = {{filetype = "NvimTree", text = "File Explorer"}},
     diagnostics = "nvim_lsp",
     max_name_length = 25,
     separator_style = "thin",

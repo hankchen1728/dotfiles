@@ -7,10 +7,14 @@ fi
 
 echo "\n=> Installing packer"
 git clone https://github.com/wbthomason/packer.nvim \
-  ~/.local/share/nvim/site/pack/packer/start/packer.nvim
+  ~/.local/share/nvim/site/pack/packer/opt/packer.nvim
 echo "=> packer installed!"
 
 nvim +PackerSync
+
+
+# ======= tree-sitter ===========
+# cargo install tree-sitter-cli --git https://github.com/tree-sitter/tree-sitter.git --tag v0.20.0
 
 # ======= install LSPs ==========
 

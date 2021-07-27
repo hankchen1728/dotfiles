@@ -1,43 +1,57 @@
 -- Only required if you have packer configured as `opt`
+vim.cmd [[packadd packer.nvim]]
+
 local packer = require("packer")
 local use = packer.use
 
-return require('packer').startup(function()
+return packer.startup(function()
   -- Packer can manage itself
   use 'wbthomason/packer.nvim'
 
+  -- Colorscheme and highlight
+  use {
+    'navarasu/onedark.nvim',
+    config = function ()
+      vim.g.onedark_style = 'cool'
+      vim.g.onedark_transparent_background = true
+      require("onedark").setup()
+      require "highlights"
+    end
+  }
+
+  use {
+    'norcalli/nvim-colorizer.lua',
+    config = function()
+      require('colorizer').setup()
+    end
+  }
+
+  use "kyazdani42/nvim-web-devicons"
+
+  -- browser
   use {
     'kyazdani42/nvim-tree.lua',
+    cmd = "NvimTreeToggle",
     config = vim.cmd [[
       nnoremap <F1> :NvimTreeToggle<CR>
       let g:nvim_tree_highlight_opened_files = 1
-      let g:nvim_tree_auto_open = 1
+      let g:nvim_tree_auto_open = 0
     ]]
   }
 
-  -- statusline
-  use 'vim-airline/vim-airline'
-  use 'vim-airline/vim-airline-themes'
-  use 'tpope/vim-fugitive'               -- git helper for vim
+   --statusline
+  use {
+    "glepnir/galaxyline.nvim",
+    after = "onedark.nvim",
+    config = function ()
+      require "plugins.statusline"
+    end
+  }
   use {
     "akinsho/nvim-bufferline.lua",
-    config = [[ require"nvim-bufferline" ]],
-  }
-  -- use "glepnir/galaxyline.nvim"
-
-  -- Colorscheme and highlight
-  use 'navarasu/onedark.nvim'
-  use {
-    'blueyed/vim-diminactive',     -- dim inactive windows
-    config = vim.cmd [[
-        " disable syntax highlight in inactive pane
-        " let g:diminactive_use_syntax = 1
-        hi ColorColumn ctermbg=236 guibg=#eee8d5
-    ]]
-  }
-  use {
-    'norcalli/nvim-colorizer.lua',
-    config = require('colorizer').setup()
+    config = function ()
+      require "plugins.bufferline"
+    end
   }
 
   -- Helper tools
@@ -92,11 +106,22 @@ return require('packer').startup(function()
     ]]
   }
 
+  -- Syntax highlight
+  use {
+    'nvim-treesitter/nvim-treesitter',
+    run = ':TSUpdate',
+    event = "BufRead",
+    config = function()
+      require "plugins.treesitter"
+    end
+  }
+
   -- LSP and auto completion
   use {
     'neovim/nvim-lspconfig',
-    config = [[ require"nvim-lspconfig" ]],
-    event = "BufRead",
+    config = function ()
+      require "plugins.lspconfig"
+    end
   }
   use {
     "onsails/lspkind-nvim",
@@ -106,48 +131,21 @@ return require('packer').startup(function()
     end
   }
 
+  -- completion
   use {
     'hrsh7th/nvim-compe',
     event = "InsertEnter",
-    config = [[ require'nvim_compe' ]]
+    config = function ()
+      require "plugins.compe"
+    end
   }
 
-  -- Formatter
-  use {
-    "sbdchd/neoformat",
-    cmd = "Neoformat",
-    config = [[ require"neoformat" ]]
-  }
-
-  -- tag viewer
-  use {
-    "liuchengxu/vista.vim",
-    config = vim.cmd[[
-      let g:vista_icon_indent = ["╰─▸ ", "├─▸ "]
-      let g:vista_default_executive = "nvim_lsp"
-
-      " toggle Vista window
-      nnoremap <space>v :Vista!!<CR>
-    ]]
-  }
-
-  use "kyazdani42/nvim-web-devicons"
-
-  use {
-    "nvim-telescope/telescope.nvim",
-    requires = {
-      {"nvim-lua/popup.nvim"},
-      {"nvim-lua/plenary.nvim"},
-      {"nvim-telescope/telescope-fzf-native.nvim", run = "make"},
-    },
-    config = [[ require"nvim-telescope" ]]
-  }
-
+  -- autopairs
   use {
     "windwp/nvim-autopairs",
-    event = "InsertEnter",
+    after = "nvim-compe",
     config = function()
-        require("nvim-autopairs").setup()
+        require "plugins.autopairs"
     end
   }
   use {
@@ -161,30 +159,61 @@ return require('packer').startup(function()
     ]]
   }
 
-  -- Syntax highlight
+  -- Formatter
   use {
-    'nvim-treesitter/nvim-treesitter',
-    run = ':TSUpdate',
-    event = "BufRead",
-    config = function()
-      require('treesitter').config()
+    "sbdchd/neoformat",
+    cmd = "Neoformat",
+    config = function ()
+      require "plugins.neoformat"
     end
   }
 
-  -- Markdown
+  -- tag viewer
   use {
-    'godlygeek/tabular',
-    ft = "markdown"
-  }
-  use {
-    'plasticboy/vim-markdown',
-    ft = "markdown",
-    config = vim.cmd [[
-      let g:vim_markdown_toc_autofit      = 1
-      let g:vim_markdown_folding_disabled = 1
-      let g:vim_markdown_no_default_key_mappings = 1
+    "liuchengxu/vista.vim",
+    after = "nvim-lspconfig",
+    config = vim.cmd[[
+      let g:vista_icon_indent = ["╰─▸ ", "├─▸ "]
+      let g:vista_default_executive = "nvim_lsp"
+
+      " toggle Vista window
+      nnoremap <space>v :Vista!!<CR>
     ]]
   }
+
+-- git stuff
+  use {
+    "lewis6991/gitsigns.nvim",
+    after = "plenary.nvim",
+    config = function()
+      require('gitsigns').setup()
+    end
+  }
+
+  -- telescope
+  use {
+    "nvim-lua/plenary.nvim",
+    event = "BufRead"
+  }
+  use {
+    "nvim-lua/popup.nvim",
+    after = "plenary.nvim"
+  }
+
+  use {
+    "nvim-telescope/telescope.nvim",
+    cmd = "Telescope",
+    config = function()
+      require "plugins.telescope"
+    end
+  }
+  use {
+    "nvim-telescope/telescope-fzf-native.nvim",
+    run = "make",
+    cmd = "Telescope"
+  }
+
+  -- markdown-preview
   use {
     'iamcco/markdown-preview.nvim',
     ft = "markdown",
@@ -215,6 +244,11 @@ return require('packer').startup(function()
       let g:mkdp_page_title = '「${name}」'
     ]]
   }
-  use 'iamcco/mathjax-support-for-mkdp'       -- mathjax support for markdown-preview.vim plugin
+
+  -- helper
+  use {
+    "dstein64/vim-startuptime",
+    cmd = "StartupTime"
+  }
 
 end)

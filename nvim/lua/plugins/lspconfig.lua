@@ -46,6 +46,17 @@ end
 
 -- Setup servers for languages
 -- local util = require("lspconfig/util")
+local system_name
+if vim.fn.has("mac") == 1 then
+  system_name = "macOS"
+elseif vim.fn.has("unix") == 1 then
+  system_name = "Linux"
+elseif vim.fn.has('win32') == 1 then
+  system_name = "Windows"
+else
+  print("Unsupported system for sumneko")
+end
+
 local sumneko_root_path = vim.fn.expand("$HOME").."/.local/lua-language-server"
 
 local servers = {
@@ -53,7 +64,7 @@ local servers = {
   -- clangd = {},
   -- svls = {}, -- Language server for verilog and SystemVerilog
   sumneko_lua = {
-    cmd = {sumneko_root_path .. "/bin/macOS/lua-language-server", "-E", sumneko_root_path .. "/main.lua"},
+    cmd = {sumneko_root_path .. "/bin/" .. system_name .. "/lua-language-server", "-E", sumneko_root_path .. "/main.lua"},
     -- root_dir = vim.loop.cwd,
     settings = {
       Lua = {

@@ -8,6 +8,11 @@ $ bash install.sh
 ```
 3. Installing one of the patched [ Nerd-Fonts ](https://github.com/ryanoasis/nerd-fonts#patched-fonts)
 
+## Statusline
+1. Switching from **vim-airline** to [galaxyline.nvim](https://github.com/glepnir/galaxyline.nvim)
+2. Starting from some [ awesome examples ](https://github.com/glepnir/galaxyline.nvim/issues/12)
+3. Choosing fancy icons with [nerd-fonts](https://www.nerdfonts.com/cheat-sheet)
+
 ## Known Issues
 #### 1. LSP automatically Start
 <img src="./figures/nvim-py-lsp.png" height="120"/>

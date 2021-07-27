@@ -1,7 +1,11 @@
--- vim.cmd [[set shortmess+=c]]
 vim.o.completeopt = "menuone,noselect"
 
-require"compe".setup {
+local present, compe = pcall(require, "compe")
+if not present then
+    return
+end
+
+compe.setup {
   enabled = true,
   autocomplete = true,  -- set `false` to diable auto popup
   debug = false,
@@ -20,7 +24,6 @@ require"compe".setup {
     calc = true,
     nvim_lsp = true,
     nvim_lua = true,
-    -- luasnip = {kind = "﬌", true},
   }
 }
 
@@ -40,12 +43,10 @@ end
 _G.tab_complete = function()
   if vim.fn.pumvisible() == 1 then
     return t "<C-n>"
-  -- elseif vim.fn['vsnip#available'](1) == 1 then
-  --   return t "<Plug>(vsnip-expand-or-jump)"
   elseif check_back_space() then
     return t "<Tab>"
   else
-    return vim.fn['compe#complete']()
+    return vim.fn["compe#complete"]()
   end
 end
 
@@ -61,19 +62,23 @@ _G.s_tab_complete = function()
 end
 
 function _G.completions()
-  local npairs = require("nvim-autopairs")
+  local npair_present, npairs = pcall(require, "nvim-autopairs")
+  if not npair_present then
+      return
+  end
+
   if vim.fn.pumvisible() == 1 then
       if vim.fn.complete_info()["selected"] ~= -1 then
           return vim.fn["compe#confirm"]("<CR>")
+          -- return vim.fn["compe#complete"](npairs.autopairs_cr())
       end
   end
   return npairs.check_break_line_char()
-  -- return t "<C-g>u<CR>"
 end
 
 -- vim.api.nvim_set_keymap("i", "<CR>", "compe#confirm('<CR>')", {expr = true, silent = true})
 vim.api.nvim_set_keymap("i", "<CR>", "v:lua.completions()", {expr = true, noremap = true})
-vim.api.nvim_set_keymap("i", "<Tab>", "v:lua.tab_complete()", {expr = true})
-vim.api.nvim_set_keymap("s", "<Tab>", "v:lua.tab_complete()", {expr = true})
-vim.api.nvim_set_keymap("i", "<S-Tab>", "v:lua.s_tab_complete()", {expr = true})
-vim.api.nvim_set_keymap("s", "<S-Tab>", "v:lua.s_tab_complete()", {expr = true})
+vim.api.nvim_set_keymap("i", "<Tab>", "v:lua.tab_complete()", {expr = true, noremap = true})
+vim.api.nvim_set_keymap("s", "<Tab>", "v:lua.tab_complete()", {expr = true, noremap = true})
+vim.api.nvim_set_keymap("i", "<S-Tab>", "v:lua.s_tab_complete()", {expr = true, noremap = true})
+vim.api.nvim_set_keymap("s", "<S-Tab>", "v:lua.s_tab_complete()", {expr = true, noremap = true})
