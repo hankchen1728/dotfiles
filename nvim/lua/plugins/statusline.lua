@@ -6,9 +6,8 @@ end
 
 local gls = gl.section
 local vcs = require('galaxyline.provider_vcs')
-local lspclient = require('galaxyline.provider_lsp')
 local fileinfo = require('galaxyline.provider_fileinfo')
-local extension = require('galaxyline.provider_extensions')
+-- local extension = require('galaxyline.provider_extensions')
 
 gl.short_line_list = {'NvimTree','vista', 'vista_kind', 'dbui','packer'}
 
@@ -74,8 +73,19 @@ local icons = {
       modified = '',
     }
 }
+
 -- Functions
 local white_space = function() return ' ' end
+
+local function get_search_results()
+  local search_term = vim.fn.getreg('/')
+  local search_count = vim.fn.searchcount({recompute = 1, maxcount = -1})
+  local active = vim.v.hlsearch == 1 and search_count.total > 0
+
+  if active then
+    return "  " .. search_term .. ' [' .. search_count.current .. '/' .. search_count.total .. '] '
+  end
+end
 
 local function file_name(is_active, highlight_group)
   local normal_fg = is_active and colors.fg or colors.grey
@@ -169,6 +179,7 @@ gls.left[i] = {
   }
 }
 
+-- disable, vista is slow
 -- i = i + 1
 -- gls.left[i] = {
 --   Context = {
@@ -176,6 +187,17 @@ gls.left[i] = {
 --     highlight = {colors.blue, colors.bg}
 --   }
 -- }
+
+i = i + 1
+gls.left[i] = {
+  Context = {
+    provider = get_search_results,
+    highlight = {colors.blue, colors.bg},
+    condition = function () return vim.fn.hlsearch end,
+    -- separator = icons.sep.left,
+    -- separator_highlight = {colors.grey, colors.bg }
+  }
+}
 
 i = i + 1
 gls.left[i] = {
@@ -206,11 +228,22 @@ gls.left[i] = {
 
 -- ------------------------------------Right side-----------------------------------------------------
 local j = 1
--- j = j + 1
 gls.right[j] = {
   ShowLspClient = {
-    provider = function ()
-	    return lspclient.get_lsp_client() .. " "
+    provider = function()
+      local clients = vim.lsp.get_active_clients()
+      if next(clients) ~= nil then
+        local buf_ft = vim.api.nvim_buf_get_option(0, "filetype")
+        for _, client in ipairs(clients) do
+          local filetypes = client.config.filetypes
+          if filetypes and vim.fn.index(filetypes, buf_ft) ~= -1 then
+            return client.name .. " "
+          end
+        end
+        return ""
+      else
+        return ""
+      end
     end,
     condition = function()
       local tbl = {["dashboard"] = true, [""] = true}

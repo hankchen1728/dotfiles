@@ -1,4 +1,9 @@
-require("telescope").setup {
+local present, telescope = pcall(require, "telescope")
+if not present then
+    return
+end
+
+telescope.setup {
   defaults = {
     vimgrep_arguments = {
       "rg",
@@ -16,22 +21,23 @@ require("telescope").setup {
     selection_strategy = "reset",
     sorting_strategy = "descending",
     layout_strategy = "horizontal",
-    -- layout_config = {
-    --   horizontal = {
-    --       prompt_position = "top",
-    --       preview_width = 0.55,
-    --       results_width = 0.8
-    --   },
-    --   vertical = {
-    --       mirror = false
-    --   },
-    --   width = 0.87,
-    --   height = 0.80,
-    --   preview_cutoff = 120
-    -- },
-    file_sorter = require "telescope.sorters".get_fuzzy_file,
+    --layout_config = {
+      --horizontal = {
+          --prompt_position = "top",
+          --preview_width = 0.55,
+          --results_width = 0.8
+      --},
+      --vertical = {
+          --mirror = false
+      --},
+      --width = 0.87,
+      --height = 0.80,
+      --preview_cutoff = 120
+    --},
+    file_sorter = require("telescope.sorters").get_fuzzy_file,
     file_ignore_patterns = {},
-    generic_sorter = require "telescope.sorters".get_generic_fuzzy_sorter,
+    generic_sorter = require("telescope.sorters").get_generic_fuzzy_sorter,
+    -- path_display = {"absolute"},
     shorten = true,
     winblend = 0,
     border = {},
@@ -39,11 +45,11 @@ require("telescope").setup {
     color_devicons = true,
     use_less = true,
     set_env = {["COLORTERM"] = "truecolor"}, -- default = nil,
-    file_previewer = require "telescope.previewers".vim_buffer_cat.new,
-    grep_previewer = require "telescope.previewers".vim_buffer_vimgrep.new,
-    qflist_previewer = require "telescope.previewers".vim_buffer_qflist.new,
+    file_previewer = require("telescope.previewers").vim_buffer_cat.new,
+    grep_previewer = require("telescope.previewers").vim_buffer_vimgrep.new,
+    qflist_previewer = require("telescope.previewers").vim_buffer_qflist.new,
     -- Developer configurations: Not meant for general override
-    buffer_previewer_maker = require "telescope.previewers".buffer_previewer_maker
+    buffer_previewer_maker = require("telescope.previewers").buffer_previewer_maker
   },
   extensions = {
     fzf = {
@@ -60,13 +66,5 @@ require("telescope").setup {
   }
 }
 
-require("telescope").load_extension("fzf")
--- require("telescope").load_extension("media_files")
-
--- Mappings
-local set_keymap = vim.api.nvim_set_keymap
-local opts = {noremap = true, silent = true}
-set_keymap("n", "<Leader>ff", [[<Cmd> Telescope find_files <CR>]], opts)
-set_keymap("n", "<Leader>fb", [[<Cmd>Telescope buffers<CR>]], opts)
-set_keymap("n", "<Leader>fh", [[<Cmd>Telescope help_tags<CR>]], opts)
-set_keymap("n", "<Leader>fo", [[<Cmd>Telescope oldfiles<CR>]], opts)
+telescope.load_extension("fzf")
+-- telescope.load_extension("media_files")

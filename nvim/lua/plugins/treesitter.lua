@@ -8,11 +8,12 @@ local ts_config = require"nvim-treesitter.configs"
 ts_config.setup {
   ensure_installed = {
     "bash",
+    "c",
+    "comment",
+    "cpp",
     "lua",
     "python",
-    "cpp",
-    "c",
-    "verilog"
+    "verilog",
   },
   highlight = {
     enable = true,

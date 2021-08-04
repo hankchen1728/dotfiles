@@ -34,4 +34,4 @@ hi_gui("CursorLineNr", "bold")
 hi_guifg("CursorLineNr", "#87bf00")
 
 -- Visual Block
--- hi_gui("Visual", "bold")
+hi_guibg("Visual", colors.grey)

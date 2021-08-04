@@ -1,3 +1,4 @@
+lua require("options")
 " { Basic } {{{
     syntax enable
     syntax sync fromstart
@@ -133,13 +134,10 @@
 " }}}
 
 " { Plugins } {{{
-lua require'pluginList'
-"}}}
+" lua require'pluginList'
+" }}}
 
 " { Color } {{{
-    " hi CursorLine cterm=none ctermbg=none ctermfg=none           " Cursor Line
-    " hi Visual cterm=bold ctermbg=240 guibg=Grey                         " Selected block
-
     " { ExtraWhitespace } {{{
         " highlight ExtraWhitespace ctermbg=239 guibg=Grey
         " autocmd BufEnter * if &ft != 'help' | match ExtraWhitespace /\s\+$/ | endif
@@ -269,6 +267,7 @@ lua require'pluginList'
 " }}}
 
 " { Mappings }{{{
+lua require("mappings")
     " paste setting (toggles the 'paste' option)
     set pastetoggle=<F2>
 
@@ -349,7 +348,7 @@ lua require'pluginList'
     " }}}
 
     " { Escape key mapping } {{{
-        nnoremap q  <Esc>
+        " nnoremap q  <Esc>
         nnoremap qq <Esc>
         vnoremap q  <Esc>
         inoremap qq <Esc>
