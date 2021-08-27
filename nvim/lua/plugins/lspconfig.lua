@@ -61,7 +61,15 @@ local sumneko_root_path = vim.fn.expand("$HOME").."/.local/lua-language-server"
 
 local servers = {
   pyright = {},
-  -- clangd = {},
+  clangd = {
+    cmd = {
+      "clangd",
+      "--background-index",
+      "--suggest-missing-includes",
+      -- "--all-scopes-completion",
+      -- "--completion-style=detailed"
+    }
+  },
   -- svls = {}, -- Language server for verilog and SystemVerilog
   sumneko_lua = {
     cmd = {sumneko_root_path .. "/bin/" .. system_name .. "/lua-language-server", "-E", sumneko_root_path .. "/main.lua"},

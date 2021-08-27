@@ -3,7 +3,6 @@ vim.cmd [[packadd packer.nvim]]
 
 local packer = require("packer")
 local use = packer.use
---local g = vim.g
 
 return packer.startup(function()
   -- Packer can manage itself
@@ -120,6 +119,8 @@ return packer.startup(function()
       require "plugins.compe"
     end
   }
+  use 'hrsh7th/vim-vsnip'
+  use 'hrsh7th/vim-vsnip-integ'
 
   -- autopairs
   use {
@@ -184,8 +185,7 @@ return packer.startup(function()
   }
   use {
     "nvim-telescope/telescope-fzf-native.nvim",
-    run = "make",
-    cmd = "Telescope"
+    run = "make"
   }
 
   -- markdown-preview

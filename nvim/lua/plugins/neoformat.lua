@@ -6,6 +6,14 @@ vim.g.neoformat_python_autopep8 = {
   replace = 0,  -- do not replace the file, only write to buffer
 }
 
+-- Set formater for cpp
+vim.g.neoformat_enabled_cpp = {"clangformat"}
+vim.g.neoformat_cpp_clangformat = {
+  exe = "clang-format",
+  args = {"--style=\"{BasedOnStyle: Google, IndentWidth: 2}\"",},
+}
+
+
 
 -- run a formatter on save
 -- vim.api.nvim_command([[

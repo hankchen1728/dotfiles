@@ -27,8 +27,8 @@ set_map("n", "cs", "<Plug>Csurround", opt)
 set_map("n", "ds", "<Plug>Dsurround", opt)
 set_map("v",  "s", "<Plug>VSurround", opt)
 set_map("v", "gs", "<Plug>VgSurround", opt)
-set_map("x",  "s", "<Plug>VSurround", opt)
-set_map("x", "gs", "<Plug>VgSurround", opt)
+-- set_map("x",  "s", "<Plug>VSurround", opt)
+-- set_map("x", "gs", "<Plug>VgSurround", opt)
 
 -- NvimTree toggle window
 map("n", "<F1>", ":NvimTreeToggle<CR>", opt)
@@ -53,6 +53,9 @@ vim.cmd("silent! command PackerStatus lua require 'pluginList' require('packer')
 vim.cmd("silent! command PackerSync lua require 'pluginList' require('packer').sync()")
 vim.cmd("silent! command PackerUpdate lua require 'pluginList' require('packer').update()")
 
+-- neoformat
+map("n", "<Leader>fm", ":Neoformat<CR>", opt)
+
 -- nvim compe
 -- use tab to navigate completion menu
 local t = function(str)
@@ -70,6 +73,8 @@ end
 _G.tab_complete = function()
   if vim.fn.pumvisible() == 1 then
     return t "<C-n>"
+  elseif vim.fn['vsnip#available'](1) == 1 then
+    return t "<Plug>(vsnip-expand-or-jump)"
   elseif check_back_space() then
     return t "<Tab>"
   else
@@ -105,7 +110,7 @@ end
 
 -- vim.api.nvim_set_keymap("i", "<CR>", "compe#confirm('<CR>')", {expr = true, silent = true})
 vim.api.nvim_set_keymap("i", "<CR>", "v:lua.completions()", {expr = true, noremap = true})
-vim.api.nvim_set_keymap("i", "<Tab>", "v:lua.tab_complete()", {expr = true, noremap = true})
-vim.api.nvim_set_keymap("s", "<Tab>", "v:lua.tab_complete()", {expr = true, noremap = true})
-vim.api.nvim_set_keymap("i", "<S-Tab>", "v:lua.s_tab_complete()", {expr = true, noremap = true})
-vim.api.nvim_set_keymap("s", "<S-Tab>", "v:lua.s_tab_complete()", {expr = true, noremap = true})
+vim.api.nvim_set_keymap("i", "<Tab>", "v:lua.tab_complete()", {expr = true})
+vim.api.nvim_set_keymap("s", "<Tab>", "v:lua.tab_complete()", {expr = true})
+vim.api.nvim_set_keymap("i", "<S-Tab>", "v:lua.s_tab_complete()", {expr = true})
+vim.api.nvim_set_keymap("s", "<S-Tab>", "v:lua.s_tab_complete()", {expr = true})

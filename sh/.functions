@@ -17,4 +17,8 @@ time_zsh_plugins() {
   done
 }
 
+space_to_underscore() {
+  echo ${1// /_}
+}
+
 # vim:filetype=zsh

@@ -106,6 +106,7 @@ lua require("options")
     " less space
     autocmd FileType csh,zsh,sh,tmux setlocal tabstop=2 softtabstop=2 shiftwidth=2
     autocmd FileType lua,yaml,json,json5,html,tex setlocal tabstop=2 softtabstop=2 shiftwidth=2
+    autocmd FileType make setlocal noexpandtab
 "}}}
 
 " { Windows/Buffers settings } {{{

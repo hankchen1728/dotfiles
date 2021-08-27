@@ -8,7 +8,6 @@ require'bufferline'.setup{
   options = {
     offsets = {{filetype = "NvimTree", text = "File Explorer"}},
     numbers = "buffer_id",
-    mappings = true,
     diagnostics = "nvim_lsp",
     max_name_length = 25,
     separator_style = "thin",
