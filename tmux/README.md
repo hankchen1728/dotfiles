@@ -3,12 +3,12 @@
 ## Configuration File
 For `tmux` >= 2.9, please use the `./tmux/.tmux.conf` or source the config file
 ```tmux
-source-file tmux/.tmux3.conf
+source-file tmux/.tmux.conf
 ```
 
 For lower and `tmux` >= 2.6, please use the `./tmux/.tmux2.conf` or source the config file
 ```tmux
-source-file tmux/.tmux.conf
+source-file tmux/.tmux2.conf
 ```
 
 ## Several Variable for Tmux Configuration
@@ -56,14 +56,13 @@ done
 ```
 See [Bash tips: Colors and formatting](https://misc.flogisoft.com/bash/tip_colors_and_formatting) for details.
 
-### Newer Tmux
-For higher `tmux>2.9`, please see [issue](https://github.com/tmux/tmux/issues/1689) for setting **options**
-
-### Enabling italic font within tmux
-For newer `tmux`, set `xterm-256color` as default terminfo
+## Fixing
+### Enabling Italic Font within Tmux
+For newer `tmux`, set `tmux-256color` as default terminfo to support *true color* feature:
 ```tmux
-set -g default-terminal 'xterm-256color'
+set -g default-terminal 'tmux-256color'
+set -g terminal-overrides ',xterm-256color:RGB'
 ```
-Otherwise, see the references below:
+For more detail, see the references below:
 1. [Enabling Italics in Vim and tmux](https://rsapkf.xyz/blog/enabling-italics-vim-tmux)
 2. [Installing tmux-256color for macOS](https://gist.github.com/bbqtd/a4ac060d6f6b9ea6fe3aabe735aa9d95)

@@ -1,0 +1,17 @@
+{
+  "imnp": {
+    "prefix": "imnp",
+    "body": "import numpy as np",
+    "description": "Load numpy module"
+  },
+  "impd": {
+    "prefix": "impd",
+    "body": "import pandas as pd",
+    "description": "Load pandas module"
+  },
+  "implt": {
+    "prefix": "implt",
+    "body": "import matplotlib.pyplot as plt",
+    "description": "Load pyplot module"
+  }
+}

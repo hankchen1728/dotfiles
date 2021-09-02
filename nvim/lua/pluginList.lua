@@ -111,21 +111,53 @@ return packer.startup(function()
     end
   }
 
-  -- completion
+  -- completion: switch to nvim-cmp
   use {
-    'hrsh7th/nvim-compe',
+    "hrsh7th/nvim-cmp",
     event = "InsertEnter",
-    config = function ()
-      require "plugins.compe"
-    end
+    config = function()
+      require "plugins.cmp"
+    end,
   }
-  use 'hrsh7th/vim-vsnip'
-  use 'hrsh7th/vim-vsnip-integ'
+  use {
+    'hrsh7th/vim-vsnip',
+    after = "nvim-cmp",
+  }
+  use {
+    'hrsh7th/vim-vsnip-integ',
+    after = "vim-vsnip"
+  }
+  use {
+    "rafamadriz/friendly-snippets",
+    after = "vim-vsnip"
+  }
+
+  -- extra source for nvim-cmp
+  use {
+    "hrsh7th/cmp-nvim-lua",
+    after = "nvim-cmp"
+  }
+  use {
+    "hrsh7th/cmp-nvim-lsp",
+    after = "cmp-nvim-lua",
+  }
+  use {
+    "hrsh7th/cmp-buffer",
+    after = "cmp-nvim-lsp",
+  }
+  use {
+    "hrsh7th/cmp-path",
+    after = "nvim-cmp"
+  }
+  use {
+    "hrsh7th/cmp-vsnip",
+    after = "cmp-buffer"
+  }
 
   -- autopairs
   use {
     "windwp/nvim-autopairs",
-    after = "nvim-compe",
+    after = "nvim-cmp",
     config = function()
       require "plugins.autopairs"
     end

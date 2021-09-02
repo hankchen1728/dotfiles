@@ -283,11 +283,6 @@ lua require("mappings")
         nnoremap <Up> <Nop>
 
         " insert mode
-        " disable the affect of `^[OA` when pressing <up> in insert mode
-        " imap <ESC>oA <ESC>ki
-        " imap <ESC>oB <ESC>ji
-        " imap <ESC>oC <ESC>li
-        " imap <ESC>oD <ESC>hi
         inoremap <Down> <Nop>
         inoremap <Left> <Nop>
         inoremap <Right> <Nop>
