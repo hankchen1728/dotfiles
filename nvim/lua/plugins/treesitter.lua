@@ -7,9 +7,10 @@ local ts_config = require"nvim-treesitter.configs"
 
 ts_config.setup {
   ensure_installed = {
+    "comment",
+    "toml",
     "bash",
     "c",
-    "comment",
     "cpp",
     "lua",
     "python",

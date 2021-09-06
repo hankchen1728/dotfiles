@@ -99,6 +99,7 @@ return packer.startup(function()
   -- LSP and auto completion
   use {
     'neovim/nvim-lspconfig',
+    requires = {"glepnir/lspsaga.nvim", opt = true},
     config = function ()
       require "plugins.lspconfig"
     end
@@ -153,6 +154,14 @@ return packer.startup(function()
     "hrsh7th/cmp-vsnip",
     after = "cmp-buffer"
   }
+  use {
+    "hrsh7th/cmp-calc",
+    after = "nvim-cmp"
+  }
+  -- use {
+  --   "hrsh7th/cmp-emoji",
+  --   after = "nvim-cmp"
+  -- }
 
   -- autopairs
   use {

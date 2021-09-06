@@ -33,3 +33,6 @@ cd ../..
 ./3rd/luamake/luamake rebuild
 cd ..
 mv ./lua-language-server ${HOME}/.local/
+
+# echo "\n=> Installing svls"
+# cargo install svls

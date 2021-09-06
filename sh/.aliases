@@ -10,6 +10,7 @@
   alias lt='ls -rlath'
   alias ls='ls --color=tty'
   alias lsa='ls -lah'
+  alias lx='ls -Xlh'
 # }}}
 
 # {remove} {{{

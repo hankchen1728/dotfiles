@@ -71,5 +71,7 @@ cmp.setup {
     { name = "path" },
     { name = "buffer" },
     { name = "vsnip" },
+    { name = "calc" },
+    -- { name = 'emoji' }
   },
 }
