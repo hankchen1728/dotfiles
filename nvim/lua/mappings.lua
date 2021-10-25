@@ -10,6 +10,10 @@ local set_map = vim.api.nvim_set_keymap
 
 local opt = {}
 
+-- builtin matchit
+set_map("n", "g[", "<Plug>(MatchitNormalMultiBackward)", opt)
+set_map("n", "g]", "<Plug>(MatchitNormalMultiForward)", opt)
+
 -- Package custom keymaps
 -- vim-easy-align
 set_map("n", "ga", "<Plug>(EasyAlign)", opt)

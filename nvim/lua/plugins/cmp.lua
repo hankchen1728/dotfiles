@@ -59,7 +59,7 @@ cmp.setup {
       if vim.fn.pumvisible() == 1 then
         vim.fn.feedkeys(vim.api.nvim_replace_termcodes("<C-p>", true, true, true), "n")
       elseif vim.fn['vsnip#jumpable'](-1) == 1 then
-        vim.fn.feedkeys(vim.api.nvim_replace_termcodes("<Plug>vsnip-jump-prev", true, true, true), "")
+        vim.fn.feedkeys(vim.api.nvim_replace_termcodes("<Plug>(vsnip-jump-prev)", true, true, true), "")
       else
         fallback()
       end

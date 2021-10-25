@@ -89,6 +89,7 @@ local servers = {
   },
   -- Language server for verilog and SystemVerilog
   svls = {
+    filetypes = { "verilog" },
     root_dir = function(fname)
       local root_file = ".svls.toml"
       return util.root_pattern(root_file)(fname) or util.find_git_ancestor(fname)
