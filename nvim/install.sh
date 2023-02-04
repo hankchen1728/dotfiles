@@ -1,13 +1,16 @@
-echo "installing packer"
+echo ">>> Installing packer ..."
 
-if [ -d ~/.local/share/nvim/site/pack/packer ]; then
-  echo "Clearning previous packer installs"
-  rm -rf ~/.local/share/nvim/site/pack
+PACKER_DIR="$HOME/.local/share/nvim/site/pack/packer/start/packer.nvim"
+
+if [ -d $PACKER_DIR ]; then
+  echo ">>> Pulling the lateset packer ..."
+  cd $PACKER_DIR
+  git pull --depth 1
+else
+  echo ">>> Downloading the packer ..."
+  git clone --depth 1 https://github.com/wbthomason/packer.nvim $PACKER_DIR
 fi
 
-echo "\n=> Installing packer"
-git clone https://github.com/wbthomason/packer.nvim \
-  ~/.local/share/nvim/site/pack/packer/opt/packer.nvim
 echo "=> packer installed!"
 
 nvim +PackerSync
