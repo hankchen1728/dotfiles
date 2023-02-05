@@ -15,9 +15,11 @@ return packer.startup(function()
   use {
     'navarasu/onedark.nvim',
     config = function ()
-      vim.g.onedark_style = 'cool'
-      vim.g.onedark_transparent_background = true
-      require("onedark").setup()
+      require("onedark").setup({
+        style = 'cool',
+        transparent = true,  -- hide background
+      })
+      require('onedark').load()
       require "highlights"
     end
   }
@@ -33,11 +35,23 @@ return packer.startup(function()
 
   -- browser
   use {
-    'kyazdani42/nvim-tree.lua',
+    'nvim-tree/nvim-tree.lua',
     cmd = "NvimTreeToggle",
     config = function()
-      vim.g.nvim_tree_highlight_opened_files = 1
-      vim.g.nvim_tree_auto_open = 0
+      require("nvim-tree").setup({
+        sort_by = "case_sensitive",
+
+        renderer = {
+          highlight_opened_files = "name",
+          highlight_modified = "icon",
+        },
+
+        modified = {
+          enable = true,
+          show_on_dirs = true,
+          show_on_open_dirs = false,
+        }
+      })
     end
   }
 
@@ -45,6 +59,7 @@ return packer.startup(function()
   use {
     "glepnir/galaxyline.nvim",
     after = "onedark.nvim",
+    branch = 'main',
     config = function ()
       require "plugins.statusline"
     end

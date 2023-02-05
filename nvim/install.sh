@@ -27,9 +27,9 @@ npm i -g pyright
 
 echo "\n=> Installing sumneko_lua"
 # sumneko_lua for Lua
-git clone https://github.com/sumneko/lua-language-server
+git clone --depth 1 https://github.com/LuaLS/lua-language-server.git
 cd lua-language-server
-git submodule update --init --recursive
+git submodule update --depth 1 --init --recursive
 cd 3rd/luamake
 compile/install.sh
 cd ../..

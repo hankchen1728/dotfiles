@@ -1,8 +1,9 @@
 require'bufferline'.setup{
   highlights = {
     buffer_selected = {
-      guifg = "#ff5f00",
-      gui = "bold,italic"
+      fg = "#ff5f00",
+      italic = true
+      -- gui = "bold,italic"
     },
   },
   options = {

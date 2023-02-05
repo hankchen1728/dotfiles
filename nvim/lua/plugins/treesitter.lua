@@ -14,6 +14,7 @@ ts_config.setup {
     "cpp",
     "lua",
     "python",
+    "vim",
     "verilog",
   },
   highlight = {
